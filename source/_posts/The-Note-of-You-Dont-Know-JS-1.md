@@ -1,5 +1,5 @@
 ---
-title: 读书笔记-你不知道的JavaScript(上)
+title: 读书笔记-你不知道的 JavaScript (上)
 copyright: true
 abbrlink: 4a895cbd
 date: 2017-06-06 22:15:01
