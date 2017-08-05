@@ -25,6 +25,4 @@ To make a target, do make [target], short for make [t]
 
 ### 博客说明
 
-博客在 `muyy` 分支上，`master` 分支为博客静态资源的生成程序。博客基于 [hexo](https://hexo.io) 构建
-
 由于 `github` 的访问速度在国内比较慢，所以网站同时部署在 `coding` 上

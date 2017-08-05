@@ -81,5 +81,20 @@
   {% include '_third-party/exturl.swig' %}
   <script type="text/javascript" src="/js/src/music/aplayer.js"></script>
   <script type="text/javascript" src="/js/src/music/init.js"></script>
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+  <script>
+  var gitment = new Gitment({
+    id: window.location.pathname, // 可选。默认为 location.href
+    owner: 'MuYunyun',
+    repo: 'MuYunyun.github.io',
+    oauth: {
+      client_id: 'f29b1fd73d2d4aee9abc',
+      client_secret: '9bef686f836f34555372c7777dd41f02a6e0e8a1',
+    },
+    perPage: 10,
+  })
+  gitment.render('container')
+  </script>
 </body>
 </html>

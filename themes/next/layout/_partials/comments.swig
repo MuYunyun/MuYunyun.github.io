@@ -31,5 +31,6 @@
     {% elseif theme.changyan.appid and theme.changyan.appkey %}
       <div id="SOHUCS"></div>
     {% endif %}
+    <div id="container"></div>
   </div>
 {% endif %}
