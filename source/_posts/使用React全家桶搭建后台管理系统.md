@@ -7,7 +7,6 @@ tags: ['React','Redux']
 categories: ['React']
 ---
 ![](http://oqhtscus0.bkt.clouddn.com/007a8b596b798249ed85d11307c959cb.jpg-muyy)
->  本文首发在我的个人博客：http://muyunyun.cn/posts/9bfbdbf4/
 
 使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。
 <!--more-->

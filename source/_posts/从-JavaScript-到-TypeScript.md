@@ -7,7 +7,6 @@ tags: ['JavaScript', 'TypeScript']
 categories: ['TypeScript']
 ---
 ![](http://oqhtscus0.bkt.clouddn.com/5e7b640325806920160f538d7c50f5d7.jpg-muyy)
-> 本文首发在我的个人博客：http://muyunyun.cn/posts/66a54fc2/
 > 文中的案例代码已经上传到 [TypeScript](https://github.com/MuYunyun/TypeScript)
 
 TypeScript 并不是一个完全新的语言, 它是 JavaScript 的超集，为 JavaScript 的生态增加了类型机制，并最终将代码编译为纯粹的 JavaScript 代码。
