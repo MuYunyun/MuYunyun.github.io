@@ -7,7 +7,6 @@ tags: ['hexo','blog']
 categories: ['git']
 ---
 ![](http://oqhtscus0.bkt.clouddn.com/d6b051baa29bb75e6b5f691313a82c33.jpg-muyy)
->  本文首发在我的个人博客：http://muyunyun.cn/
 
 写博客有三个层次，第一层次是借鉴居多的博文，第二层次是借鉴后经过消化后有一定量产出的博文，第三层次是原创好文居多的博文。在参考了大量前辈搭建hexo的心得后，此文尽量把一些别人未提到的点以及比较好用的点给提出来。所以你在参考本文的时候，应该已经过完了[hexo](https://hexo.io/)。本文有以下内容:
 * 快速实现博客压缩

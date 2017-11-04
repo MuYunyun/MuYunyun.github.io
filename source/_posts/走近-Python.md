@@ -1,14 +1,16 @@
 ---
-title: 走近 Python
+title: 走近 Python (类比 JS)
 copyright: true
 abbrlink: a9d08041
 date: 2017-10-31 08:53:14
 tags: ['Python']
 categories: ['Python']
 ---
-![](http://oqhtscus0.bkt.clouddn.com/f27594afeda6b513ffec98c3e60ccbb0.jpg-muyy)
+![](http://oqhtscus0.bkt.clouddn.com/c5438d5b79ea49066234e0328fde04e1.jpg-muyy)
 
-Python 是一门运用很广泛的语言，自动化脚本、爬虫，甚至在深度学习领域也都有 Python 的身影。作为一名前端开发者，也了解 JS 很多特性借鉴自 Python，比如默认参数、Decorator，同时本文会对 Python 的一些用法与 JS 进行类比。不管是提升自己的知识广度，还是更好地迎接 AI 时代，Python 都是一门值得学习的语言。
+> 本文首发在 [个人博客](http://muyunyun.cn/posts/a9d08041/)
+
+Python 是一门运用很广泛的语言，自动化脚本、爬虫，甚至在深度学习领域也都有 Python 的身影。作为一名前端开发者，也了解 ES6 中的很多特性借鉴自 Python (比如默认参数、解构赋值、Decorator等)，同时本文会对 Python 的一些用法与 JS 进行类比。不管是提升自己的知识广度，还是更好地迎接 AI 时代，Python 都是一门值得学习的语言。
 
 <!--more-->
 
@@ -47,8 +49,9 @@ bool(0) # False
 1 + '1' # TypeError: cannot concatenate 'str' and 'int' objects
 ```
 
-此外写代码的时候经常会需要判断值的类型，python 中提供的 isinstance(x, type) 可以用来判断 x 是否属于相应的 type 类型。
+此外写代码的时候经常会需要判断值的类型，可以 使用 python 提供的 type() 函数获取变量的类型，或者使用 isinstance(x, type) 来判断 x 是否属于相应的 type 类型。
 ``` py
+type(1.3) == float # True
 isinstance('a', str) # True
 isinstance(1.3, int) # False
 isinstance(True, bool) # True
@@ -62,7 +65,7 @@ isinstance({}, dict) # True
 
 #### list 类型
 
-py 中 List 类型类似于 JS 中的 Array,
+Python 中 List 类型类似于 JS 中的 Array,
 
 ``` py
 L = [1, 2, 3]
@@ -227,7 +230,7 @@ for 循环可以嵌套，因此，在列表生成式中，也可以用多层 for
 
 #### 默认参数
 
-JS ES6 中的 默认参数正是借鉴于 Python，用法如下：
+JS 中 ES6 的 默认参数正是借鉴于 Python，用法如下：
 
 ``` py
 def greet(name='World'):
@@ -252,20 +255,215 @@ fn('a', 'b') # ('a', 'b')
 
 Python 解释器会把传入的一组参数组装成一个 tuple 传递给可变参数，因此，在函数内部，直接把变量 args 看成一个 tuple 就好了。
 
-### map() 函数
+#### 常用高阶函数
 
-Python 中的 map() 函数和 JS 中的 map() 函数实现的目的相同，但使用方法不同，它接收一个函数 f 和一个 list，并通过把函数 f 依次作用在 list 的每个元素上，得到一个新的 list 并返回。
+Python 中常用的函数 (map、reduce、filter) 的作用和 JS 中一致，只是用法稍微不同。
+
+* map 函数: 接收一个函数 f 和一个 list，并通过把函数 f 依次作用在 list 的每个元素上，得到一个新的 list 并返回。
 
 ```py
 def f(x):
-    return x*x
+    return x * x
 print map(f, [1, 2, 3, 4, 5, 6, 7, 8, 9]) # [1, 4, 9, 16, 25, 36, 49, 64, 81]
 ```
 
+* reduce 函数: 接收一个函数 f 和一个 list(可以接受第三个值作为初始值)，reduce() 对 list 的每个元素反复调用函数 f，并返回最终结果值。
 
+```py
+def f(x, y):
+    return x * y
 
+reduce(f, [1, 3, 5]) # 15
+```
 
+* filter 函数: 接收一个函数 f 和一个list，这个函数 f 的作用是对每个元素进行判断，返回 True或 False，filter() 根据判断结果自动过滤掉不符合条件的元素，返回由符合条件元素组成的新 list。
 
+```py
+def is_odd(x):
+    return x % 2 == 1
+
+filter(is_odd, [1, 4, 6, 7, 9, 12, 17]) # [1, 7, 9, 17]
+```
+
+#### 匿名函数
+
+和 JS 的匿名函数不同的地方是，Python 的匿名函数中只能有一个表达式，且不能写 return。拿 map() 函数为例：
+
+```py
+map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9]) # [1, 4, 9, 16, 25, 36, 49, 64, 81]
+```
+
+关键词 lambda 表示匿名函数，冒号前面的 x 表示函数参数，可以看出匿名函数 `lambda x: x* x` 实际上就是:
+
+``` py
+def f(x):
+    return x * x
+```
+
+#### 闭包
+
+之前写过一些关于 JS 闭包的文章，比如 [深入浅出JavaScript之闭包（Closure）](http://www.cnblogs.com/MuYunyun/p/5930703.html)、以及 [读书笔记-你不知道的 JavaScript (上)](http://muyunyun.cn/posts/4a895cbd/)，Python 中闭包的定义和 JS 中的是一致的即：内层函数引用了外层函数的变量，然后返回内层函数。下面来看下 Py 中闭包之 for 循环经典问题：
+
+``` py
+# 希望一次返回3个函数，分别计算1x1,2x2,3x3:
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+            return i * i
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count() # 这种写法相当于 ES6 中的解构赋值
+print f1(), f2(), f3() # 9 9 9
+```
+
+老问题了，f1(), f2(), f3() 结果不应该是 1, 4, 9 吗，实际结果为什么都是 9 呢？
+
+原因就是当 count() 函数返回了 3 个函数时，这 3 个函数所引用的变量 i 的值已经变成了 3。由于 f1、f2、f3 并没有被调用，所以，此时他们并未计算 i*i，当 f1 被调用时，i 已经变为 3 了。
+
+要正确使用闭包，就要确保引用的局部变量在函数返回后不能变。代码修改如下:
+
+方法一: 可以理解为创建了一个封闭的作用域，i 的 值传给 j 之后，就和 i 没任何关系了。每次循环形成的闭包都存进了内存中。
+```py
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f(j):
+            def g(): # 方法一
+                return j * j
+            return g
+        r = f(i)
+        fs.append(r)
+    return fs
+
+f1, f2, f3 = count()
+print f1(), f2(), f3() # 1 4 9
+```
+
+方法二：思路比较巧妙，用到了默认参数 j 在函数定义时可以获取到 i 的值，虽然没有用到闭包，但是和方法一有异曲同工之处。
+```py
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f(j = i): # 方法二
+            return j * j
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count()
+print f1(), f2(), f3() # 1 4 9
+```
+
+#### decorator 装饰器
+
+ES6 的语法中的 decorator 正是借鉴了 Python 的 decorator。decorator 本质上就是`一个高阶函数，它接收一个函数作为参数，然后返回一个新函数`。
+
+那装饰器的作用在哪呢？先上一段日常项目中用 ts 写的网关代码：
+
+```js
+@Post('/rider/detail')  // URL 路由
+@log()                   // 打印日志
+  @ResponseBody
+  public async getRiderBasicInfo(
+    @RequestBody('riderId') riderId: number,
+    @RequestBody('cityId') cityId: number,
+  ) {
+    const result = await this.riderManager.findDetail(cityId, riderId)
+    return result
+  }
+```
+
+可以看出使用装饰器可以极大地简化代码，避免每个函数(比如日志、路由、性能检测)编写重复性代码。
+
+回到 Python 上，Python 提供的 @ 语法来使用 decorator，`@ 等价于 f = decorate(f)`。下面来看看 @log() 在 Python 中的实现:
+
+```py
+# 我们想把调用的函数名字给打印出来
+@log()
+def factorial(n):
+    return reduce(lambda x,y: x*y, range(1, n+1))
+print factorial(10)
+
+# 来看看 @log() 的定义
+def log():
+    def log_decorator(f):
+        def fn(x):
+            print '调用了函数' + f.__name__ + '()'
+            return f(x)
+        return fn
+    return log_decorator
+
+# 结果
+# 调用了函数 factorial()
+# 3628800
+```
+
+### class
+#### 面向对象编程
+
+面向对象编程是一种程序设计范式，基本思想是：用类定义抽象类型，然后根据类的定义创建出实例。在掌握其它语言的基础上，还是比较容易理解这块知识点的，比如从下面两种写法可以看出不同语言的语言特性间竟然有如此多的共性。
+
+es6: (附：本文的主题是 python，所以只是初略展示下 js 中类的定义以及实例的创建，为了说明写法的相似性)
+```js
+class Person {
+    constructor(name, age) {
+        this.name = name
+        this.age = age
+    }
+}
+
+const child1 = new Person('Xiao Ming', 10)
+```
+
+Python: (核心要点写在注释中)
+```py
+# 定义一个 Person 类：根据 Person 类就可以造成很多 child 实例
+class Person(object):
+    address = 'Earth' # 类属性 (实例公有)
+    def __init__(self, name, age): # 创建实例时，__init__()方法被自动调用
+        self.name = name
+        self.age = age
+    def get_age(self): # 定义实例方法，它的第一个参数永远是 self，指向调用该方法的实例本身，其他参数和普通函数是一样的
+        return self.age
+
+child1 = Person('Xiao Ming', 10)
+child2 = Person('Xiao Hong', 9)
+
+print child1.name # 'Xiao Ming'
+print child2.get_age() # 9
+print child1.address # 'Earth'
+print child2.address # 'Earth'
+```
+
+#### 继承
+
+child 属于 Student 类，Student 类属于 People 类，这就引出了继承: 即获得了父类的方法属性后又能添加自己的方法属性。
+
+```py
+class Person(object):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+class Student(Person):
+    def __init__(self, name, age, grade):
+        super(Student, self).__init__(name, age) # 这里也能写成 Person.__init__(self, name, age)
+        self.grade = grade
+
+s = Student('Xiao Ming', 10, 90)
+print s.name # 'Xiao Ming'
+print s.grade # 90
+```
+
+可以看到子类在父类的基础上又增加了 grade 属性。我们可以再来看看 s 的类型。
+
+```py
+isinstance(s, Person)
+isinstance(s, Student)
+```
+
+可以看出，Python 中在一条继承链上，一个实例可以看成它本身的类型，也可以看成它父类的类型。
 
 
 

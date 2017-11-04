@@ -9,8 +9,6 @@ categories: ['Node.js']
 
 ![](http://oqhtscus0.bkt.clouddn.com/d2867e4c299fe6b1f84d9610a6af1eb5.jpg-muyy)
 
-> 本文首发在个人博客：[http://muyunyun.cn/posts/7b9fdc87/](http://muyunyun.cn/posts/7b9fdc87/)
-
 提到 Node.js, 我们脑海就会浮现异步、非阻塞、单线程等关键词，进一步我们还会想到 buffer、模块机制、事件循环、进程、V8、libuv 等知识点。本文起初旨在理顺 Node.js 以上易混淆概念，然而一入异步深似海，本文尝试基于 Node.js 的异步展开讨论，其他的主题只能日后慢慢补上了。(附：亦可以把本文当作是朴灵老师所著的《深入浅出 Node.js》一书的小结)。
 
 <!-- more -->
