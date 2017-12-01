@@ -20,7 +20,7 @@ I like programming, music, surfing internet, playing games, and I love making fr
 文章皆为个人观点，不代表所服务的公司。
 
 ### Social Links
-* Github: [@MuYunyun](https://github.com/MuYunyun)
-* Social: [QQ](tencent://message/?uin=328375795&Menu=yes)
+* Github: [MuYunyun](https://github.com/MuYunyun)
+* Social: [掘金](https://juejin.im/user/582becad2f301e0059426df2) / [QQ](tencent://message/?uin=328375795&Menu=yes)
 * E-mail: [muyy95@gmail.com](mailto:muyy95@gmail.com)
 * Old Blog: [muyunyun.cnblogs.com](muyunyun.cnblogs.com)

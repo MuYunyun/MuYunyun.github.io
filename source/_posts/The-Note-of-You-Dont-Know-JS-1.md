@@ -331,7 +331,22 @@ JavaScript中的对象有字面形式（比如`var a = { .. }`)和构造形式�
 作者认为“JavaScript中万物都是对象”的观点是不对的。因为对象只是 6 个基础类型( string、number、boolean、null、undefined、object )之一。对象有包括 function 在内的子对象，不同子类型具有不同的行为，比如内部标签 [object Array] 表示这是对象的子类型数组。
 
 ### 复制对象
-思考一下这个对象：
+
+首先看下这个对象：
+```js
+let a = {
+  name: 'XiaoMing',
+  habits:  ['a', 'b']
+}
+```
+
+从这个对象，先抛出下面几个概念：
+
+* 普通的 = 赋值：b = a，如果修改了 b.name，那么 a.name 也会改变
+* 浅复制：如果修改了 b.name, a.name 不会改变，但是修改 b.habits 数组中的值，a.habits 的值也会改变
+* 深复制：b 的值改变，不会对 a 产生任何影响
+
+再来看下这个对象：
 ``` js
 function anotherFunction() { /*..*/ }
 
@@ -351,15 +366,12 @@ var myObject = {
 anotherArray.push( myObject )
 ```
 如何准确地表示 myObject 的复制呢？
-这里有一个知识点。
-* 浅复制。复制出的新对象中 a 的值会复制旧对象中 a 的值，也就是 2，但是新对象中 b、c、d 三个属性其实只是三个引用。
-* 深复制。除了复制 myObject 以外还会复制 anotherArray。这时问题就来了，anotherArray 引用了 myObject, 所以又需要复制 myObject，这样就会由于循环引用导致死循环。
 
-对于 JSON 安全的对象(就是能用 JSON.stringify 序列号的字符串)来说，有一种巧妙的复制方法：
+这个例子中除了复制 myObject 以外还会复制 anotherArray。这时问题就来了，anotherArray 引用了 myObject, 所以又需要复制 myObject，这样就会由于循环引用导致死循环。对于 JSON 安全的对象(就是能用 JSON.stringify 序列号的字符串)来说，有一种巧妙的深复制方法：
 ``` js
 var newObj = JSON.parse( JSON.stringify(someObj) )
 ```
-我认为这种方法就是深复制。相比于深复制，浅复制非常易懂并且问题要少得多，ES6 定义了 Object.assign(..) 方法来实现浅复制。 Object.assign(..) 方法的第一个参数是目标对象，之后还可以跟一个或多个源对象。它会遍历一个或多个源对象的所有可枚举的自由键并把它们复制到目标对象，最后返回目标对象，就像这样：
+相比于深复制，浅复制非常易懂并且问题要少得多，ES6 定义了 Object.assign(..) 方法来实现浅复制。 Object.assign(..) 方法的第一个参数是目标对象，之后还可以跟一个或多个源对象。它会遍历一个或多个源对象的所有可枚举的自由键并把它们复制到目标对象，最后返回目标对象，就像这样：
 ``` js
 var newObj = Object.assign( {}, myObject );
 
