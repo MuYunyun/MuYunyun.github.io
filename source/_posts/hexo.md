@@ -8,10 +8,10 @@ categories: ['git']
 ---
 ![](http://oqhtscus0.bkt.clouddn.com/d6b051baa29bb75e6b5f691313a82c33.jpg-muyy)
 
-写博客有三个层次，第一层次是借鉴居多的博文，第二层次是借鉴后经过消化后有一定量产出的博文，第三层次是原创好文居多的博文。在参考了大量前辈搭建hexo的心得后，此文尽量把一些别人未提到的点以及比较好用的点给提出来。所以你在参考本文的时候，应该已经过完了[hexo](https://hexo.io/)。本文有以下内容:
+写博客有三个层次，第一层次是借鉴居多的博文，第二层次是借鉴后经过消化后有一定量产出的博文，第三层次是原创好文居多的博文。在参考了大量前辈搭建hexo的心得后，此文尽量把一些别人未提到的点以及比较好用的点给提出来。所以你在参考本文的时候，应该已经过完了[hexo](https://hexo.io/)。本文有以下内容:
 * 快速实现博客压缩
 * 文章链接唯一化
-* 添加酷炫的打赏二维码
+* 添加酷炫的打赏二维码
 * 自定义JS和CSS
 * 添加酷炫的歌单模块以及播放器
 * github分支管理博客思路
@@ -21,9 +21,9 @@ categories: ['git']
 
 ## 快速实现博客压缩
 
-项目压缩也叫`代码丑化`,分别对html、css、js、images进行优化，即把重复的代码合并，把多余的空格去掉，用算法把images进行压缩。压缩后的博客，加载速度会有较大的提升，自然能留住更多游客。
+项目压缩也叫`代码丑化`, 分别对 html、css、js、images进行优化，即把重复的代码合并，把多余的空格去掉，用算法把 images 进行压缩。压缩后的博客，加载速度会有较大的提升，自然能留住更多游客。
 
-蛮多朋友使用了`gulp`对博客进行压缩，这也是一个办法，但在社区逛了下，找到了一个比较好用的模块[hexo-all-minifier](https://github.com/chenzhutian/hexo-all-minifier)，这个模块集成了对html、css、js、image的优化。安装上此模块后，只要在根目录下的_config.yml文件中加上如下字段就可对博客所有内容进行压缩。
+蛮多朋友使用了`gulp`对博客进行压缩，这也是一个办法，但在社区逛了下，找到了一个比较好用的模块[hexo-all-minifier](https://github.com/chenzhutian/hexo-all-minifier)，这个模块集成了对 html、css、js、image 的优化。安装上此模块后，只要在根目录下的_config.yml文件中加上如下字段就可对博客所有内容进行压缩。
 ``` js
 html_minifier:
   enable: true
@@ -86,11 +86,11 @@ abbrlink:
 * crc32 & hex
 * crc32 & dec
 
-## 添加酷炫的打赏二维码
-看了好些博客，支付宝的收款码和微信的收款码都是分开的，且是没有美化过的二维码，让人打赏的欲望自然就下降了。来看一下我的赞赏二维码(支持微信和支付宝支付哟)
+## 添加酷炫的打赏二维码
+看了好些博客，支付宝的收款码和微信的收款码都是分开的，且是没有美化过的二维码，让人打赏的欲望自然就下降了。来看一下我的赞赏二维码(支持微信和支付宝支付哟)
 ![](http://oqhtscus0.bkt.clouddn.com/134f61fc3181e90acfa945aad72a04a6.png-400)
 
-实现这个酷炫二维码的流程如下：
+实现这个酷炫二维码的流程如下：
 * 首先，分别获得支付宝和微信的收款码
 * 接着到[芝麻二维码](https://www.hotapp.cn/shouqian)里将两张二维码合并
 * 最后到[第九工场](http://www.9thws.com/)生成自己喜欢的造型
@@ -101,7 +101,7 @@ alipay: /pay.png
 ```
 
 ### 打赏字体不闪动
-修改文件`next/source/css/_common/components/post/post-reward.styl`，然后注释其中的函数`wechat:hover`和`alipay:hover`，如下：
+修改文件`next/source/css/_common/components/post/post-reward.styl`，然后注释其中的函数`wechat:hover`和`alipay:hover`，如下：
 ``` js
 /* 注释文字闪动函数
  #wechat:hover p{
@@ -134,16 +134,16 @@ alipay: /pay.png
 ## 添加酷炫的歌单模块以及播放器
 这个模块借鉴了@[小胡子哥](http://www.barretlee.com/entry/)。根据上面的自定义JS和CSS的知识点不难实现歌单模块以及播放器。效果如下图：
 ![](http://oqhtscus0.bkt.clouddn.com/502d78856e46095253e59fd11396b2a4.jpg)
-核心代码在`\themes\next\source\js\src\music\nmlist`中，[点击看源码](https://github.com/MuYunyun/MuYunyun.githubio/blob/muyy/themes/next/source/js/src/music/nmlist.js)，其核心思路就是通过jsonp的方式对定义好的歌单进行调用。
+核心代码在`\themes\next\source\js\src\music\nmlist`中，[点击看源码](https://github.com/MuYunyun/MuYunyun.githubio/blob/muyy/themes/next/source/js/src/music/nmlist.js)，其核心思路就是通过jsonp的方式对定义好的歌单进行调用。
 
 在调试的过程中，发现了小胡子哥代码的一个bug：当点击一个专辑暂停后，再点击其他的专辑，这时候点击暂停、播放的控制逻辑有错误。经过排查在nmlist.js文件中的bind方法中加上了`$("#nmPlayer").removeAttr("data-paused")`解决了这个bug。
 
 ![](http://oqhtscus0.bkt.clouddn.com/73d9f4070b81bbdab8f80db388af4a40.jpg)
 
-再接着玩的话，可以给播放器加上歌词的功能。这里有一篇[相关文章](http://frankorz.com/2016/09/30/Hexo-patch/#歌词),有机会可以去把玩一番。
+再接着玩的话，可以给播放器加上歌词的功能。这里有一篇[相关文章](http://frankorz.com/2016/09/30/Hexo-patch/#歌词), 有机会可以去把玩一番。
 
 ## github分支管理博客思路
-有一个问题，如果我电脑坏了怎么办，因为在github中的我们github.io项目是只有编译后的文件的，没有源文件的，也就是说，如果我们的电脑坏了，打不开了，我们的博客就不能进行更新了，所以我们要把我们的源文件也上传到github上。这个时候我可以选择新建一个仓库来存放源文件，也可以把源文件push到user.github.io的其他分支。我选择了后者。
+有一个问题，如果我电脑坏了怎么办，因为在github中的我们github.io项目是只有编译后的文件的，没有源文件的，也就是说，如果我们的电脑坏了，打不开了，我们的博客就不能进行更新了，所以我们要把我们的源文件也上传到github上。这个时候我可以选择新建一个仓库来存放源文件，也可以把源文件 push 到 user.github.io 的其他分支。我选择了后者。
 
 ### 创建muyy(任意)分支
 创建两个分支：master 与 muyy,（这个muyy分支就是存放我们源文件的分支，我们只需要更新muyy分支上的内容据就好，master上的分支hexo编译的时候会更新的）
@@ -175,20 +175,20 @@ git push origin muyy
 ```
 
 ## 秒传图片到七牛云并展现在博客中
-在markdown中写blog的朋友，想必这点是最烦恼的吧，一般来说都要手动上传图片到七牛云，再把链接写到markdown中。逛了逛社区，有人用phthon实现一个自动上传的脚本，但是我觉得还不是特别方便，这时在github上找到一个一键贴图工具[qiniu-image-tool](https://github.com/jiwenxing/qiniu-image-tool)，它支持本地文件、截图、网络图片一键上传七牛云并返回图片引用。Mac是基于Alfred的，其windows也有相应版本[windows版本](http://jverson.com/2017/05/28/qiniu-image-v2/)。
+在markdown中写blog的朋友，想必这点是最烦恼的吧，一般来说都要手动上传图片到七牛云，再把链接写到markdown中。逛了逛社区，有人用phthon实现一个自动上传的脚本，但是我觉得还不是特别方便，这时在github上找到一个一键贴图工具[qiniu-image-tool](https://github.com/jiwenxing/qiniu-image-tool)，它支持本地文件、截图、网络图片一键上传七牛云并返回图片引用。Mac 是基于 Alfred 的，其 windows 也有相应版本[windows版本](http://jverson.com/2017/05/28/qiniu-image-v2/)。
 
-按照其要求配置好以后，用截图软件截图后，或者本地图片后copy，然后直接按设置好的command+option+v，然后在图片成功上传到七牛云图床上，剪贴板上也有相应的连接。
+按照其要求配置好以后，用截图软件截图后，或者本地图片后 copy，然后直接按设置好的 command+option+v，然后在图片成功上传到七牛云图床上，剪贴板上也有相应的连接。
 ![](https://raw.githubusercontent.com/jiwenxing/qiniu-image-tool/master/res/local.gif)
 
-## 将博客同时部署到github和coding
-通常我们把hexo托管在github，但是毕竟github是国外的，访问速度上还是有点慢，所以想也部署一套在国内的托管平台，目前gitcafe已经被coding收购了，所以就决定部署到coding。但是coding有个不好的地方就是访问自定义域名的站点时，不充值的话会有广告跳转页，所以我现在也是处于观望的态度，先把coding的环境代码也先布置好，等它哪一天广告跳转页没了，就把域名指过去。
+## 将博客同时部署到 github 和 coding
+通常我们把hexo托管在github，但是毕竟github是国外的，访问速度上还是有点慢，所以想也部署一套在国内的托管平台，目前gitcafe已经被coding收购了，所以就决定部署到coding。但是coding有个不好的地方就是访问自定义域名的站点时，不充值的话会有广告跳转页，所以我现在也是处于观望的态度，先把coding的环境代码也先布置好，等它哪一天广告跳转页没了，就把域名指过去。
 
-### coding上创建一个新项目
-这里只介绍coding上面如何创建项目，以及把本地hexo部署到coding上面
+### coding 上创建一个新项目
+这里只介绍 coding 上面如何创建项目，以及把本地 hexo 部署到 coding 上面
 ![](http://oqhtscus0.bkt.clouddn.com/41b27d98189a9164d2b2a47ccbafdbfa.jpg)
 
-### 同步本地hexo到coding上
-把获取到了ssh配置_config.yml文件中的deploy下，如果是第一次使用coding的话，需要设置SSH公钥，生成的方法可以参考[coding帮助中心](https://coding.net/help/doc/git/ssh-key.html),其实和github配置一模一样的。
+### 同步本地 hexo 到 coding 上
+把获取到了ssh配置_config.yml文件中的deploy下，如果是第一次使用 coding 的话，需要设置SSH公钥，生成的方法可以参考[coding帮助中心](https://coding.net/help/doc/git/ssh-key.html), 其实和 github 配置一模一样的。
 
 本地打开 `id_rsa.pub` 文件，复制其中全部内容，填写到`SSH_RSA公钥`key下的一栏，公钥名称可以随意起名字。完成后点击“添加”，然后输入密码或动态码即可添加完成。
 
