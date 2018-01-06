@@ -132,7 +132,7 @@ alipay: /pay.png
 添加外部css样式和引用自定义js代码是一样的，在对应css文件夹内添加自定义外部css样式文件，然后在layout文件中添加引用即可。也可以在`\themes\next\source\css\_custom\custom.styl`文件中进行样式的添加。
 
 ## 添加酷炫的歌单模块以及播放器
-这个模块借鉴了@[小胡子哥](http://www.barretlee.com/entry/)。根据上面的自定义JS和CSS的知识点不难实现歌单模块以及播放器。效果如下图：
+这个模块借鉴了@[小胡子哥](http://www.barretlee.com/entry/)。根据上面的自定义JS和CSS的知识点不难实现歌单模块以及播放器。效果如下图：
 ![](http://oqhtscus0.bkt.clouddn.com/502d78856e46095253e59fd11396b2a4.jpg)
 核心代码在`\themes\next\source\js\src\music\nmlist`中，[点击看源码](https://github.com/MuYunyun/MuYunyun.githubio/blob/muyy/themes/next/source/js/src/music/nmlist.js)，其核心思路就是通过jsonp的方式对定义好的歌单进行调用。
 

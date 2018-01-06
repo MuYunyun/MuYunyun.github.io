@@ -8,7 +8,7 @@ categories: ['React']
 ---
 ![](http://oqhtscus0.bkt.clouddn.com/007a8b596b798249ed85d11307c959cb.jpg-muyy)
 
-使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。
+使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。
 <!--more-->
 
 ## 项目地址以及局部展示
@@ -58,7 +58,7 @@ categories: ['React']
 
 下面对目录结构作以下说明
 * 项目最初始是用 [create-react-app](https://github.com/facebookincubator/create-react-app) 初始化的，create-react-app 是Facebook官方提供的 React 脚手架，也是业界最优秀的 React 应用开发工具之一;
-* client 作为入口目录，到时候可以把第三方中间件也放在此处;
+* client 作为入口目录，到时候可以把第三方中间件也放在此处;
 * container 和 components 存放的都是 react 组件,区别如下表。但是我把和样式有关的组件就放在container中，把和功能有关的模块(比如自己分装的表格组件、弹出输入框组件等)就放到components中，若日后有需要，container 和 component 组件都是可以在 Redux 数据流中的。
 
 |                       |          container          |       component       |
@@ -75,7 +75,7 @@ categories: ['React']
 虽然用到的技术栈众多，但是自己也谈不上熟练运用，多半是边查API边用的，所以只罗列些自己用相关的技术栈解决的点;
 
 ### webpack(2.x)
-4月的时候 create-react-app 还是基于 webpack(1.x) 构建的，5月27号升到了webpack(2.6),于是我也进行了 webpack 的版本升级。
+4月的时候 create-react-app 还是基于 webpack(1.x) 构建的，5月27号升到了webpack(2.6),于是我也进行了 webpack 的版本升级。
 #### 按需加载
 [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) 是一个用于按需加载组件代码和样式的 babel 插件，使用此插件后，在引人 antd 相应模块就能实现按需引人，在config/webpack.config.dev.js 文件中作如下修改:
 ```js
@@ -196,9 +196,9 @@ fetchJsonp(url,{method: 'GET'})
 
 ![](http://oqhtscus0.bkt.clouddn.com/a40c3540ca26a56b28506d14125c04c1.jpg-400)
 
-画了一幅比较简陋的图来说明 redux 的大致流程，假设首先通过鼠标点击页面上的按钮触发了一个行为(action)，这时我们叫了一辆出租车 dispatch() 将这个 action 带到了终点站 store。这时候 store 就会通过 reducer 函数返回一个新的状态 state，从而改变 UI 显示。之前也写了篇[深入Redux架构](http://www.cnblogs.com/MuYunyun/p/6530715.html)
+画了一幅比较简陋的图来说明 redux 的大致流程，假设首先通过鼠标点击页面上的按钮触发了一个行为(action)，这时我们叫了一辆出租车 dispatch() 将这个 action 带到了终点站 store。这时候 store 就会通过 reducer 函数返回一个新的状态 state，从而改变 UI 显示。之前也写了篇[深入Redux架构](http://www.cnblogs.com/MuYunyun/p/6530715.html)
 
-下面通过把 [代办事项](https://github.com/MuYunyun/todoList) 这个demo运用到后台管理系统中来讲解 Redux 在其中的运用。
+下面通过把 [代办事项](https://github.com/MuYunyun/todoList) 这个demo运用到后台管理系统中来讲解 Redux 在其中的运用。
 
 首先，在入口目录创建 store
 ```js
@@ -211,7 +211,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-接着，我使用了 [redux-actions](https://github.com/acdlite/redux-actions) 这个模块。使用 redux-actions 的好处是能简化大量对 action 的声明，以及能简化 reducer 的写法。
+接着，我使用了 [redux-actions](https://github.com/acdlite/redux-actions) 这个模块。使用 redux-actions 的好处是能简化大量对 action 的声明，以及能简化 reducer 的写法。
 
 代办事项的 actions 文件片段(拿展示全部任务、已完成任务、未完成任务的 action 举例):
 ```js
@@ -247,7 +247,7 @@ import { setVisibility } from 'actions/todoList'
 
 dispatch(this.props.dispatch(setVisibility('SHOW_ALL')))
 ```
-connect 来自 [react-redux](https://github.com/reactjs/react-redux)，这里的 @ 是 ES7里的装饰器的用法，使用它之后又能减少不少的代码量，原来还要写 `mapStateToProps`、`mapDispatchToProps`。
+connect 来自 [react-redux](https://github.com/reactjs/react-redux)，这里的 @ 是 ES7里的装饰器的用法，使用它之后又能减少不少的代码量，原来还要写 `mapStateToProps`、`mapDispatchToProps`。
 
 ## 项目的一些扩展计划
-计划在该项目把平时工作、学习中遇到的react案例抽离成demo展现出来，所以以后还会多出一些模块。另外过段时间会在该项目中引人 typescript，如果还有精力的话，可以在这个项目上折腾下网关层。喜欢这个项目的话，[点我 Star](https://github.com/MuYunyun/reactSPA)。
+计划在该项目把平时工作、学习中遇到的react案例抽离成demo展现出来，所以以后还会多出一些模块。另外过段时间会在该项目中引人 typescript，如果还有精力的话，可以在这个项目上折腾下网关层。喜欢这个项目的话，[点我 Star](https://github.com/MuYunyun/reactSPA)。

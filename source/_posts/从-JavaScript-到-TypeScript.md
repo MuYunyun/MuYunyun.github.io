@@ -22,9 +22,9 @@ JavaScript 是一门弱类型语言，变量的数据类型具有动态性，只
 
 此外，类型注释是 TypeScript 的内置功能之一，允许文本编辑器和 IDE 可以对我们的代码执行更好的静态分析。 这意味着我们可以通过自动编译工具的帮助，在编写代码时减少错误，从而提高我们的生产力。
 
-对 TypeScript 的简介到此，接下来对其特有的知识点进行简单概括总结，(网上很多教程实际上把 ES6， ES7 的知识点也算进 ts 的知识点了，当然这没错~)
+对 TypeScript 的简介到此，接下来对其特有的知识点进行简单概括总结，(网上很多教程实际上把 ES6， ES7 的知识点也算进 ts 的知识点了，当然这没错~)
 
-## 数据类型
+## 数据类型
 
 ### String 类型
 一个保存字符串的文本，类型声明为 string。可以发现类型声明可大写也可小写，后文同理。
@@ -34,7 +34,7 @@ let name2: String = 'muyy'
 ```
 
 ### Boolen 类型
-boolean是 true 或 false 的值，所以 `let isBool3: boolean = new Boolean(1)` 就会编译报错，因为 new Boolean(1) 生成的是一个 Bool 对象。
+boolean是 true 或 false 的值，所以 `let isBool3: boolean = new Boolean(1)` 就会编译报错，因为 new Boolean(1) 生成的是一个 Bool 对象。
 ```ts
 let isBool1: boolean = false
 ```
@@ -102,8 +102,8 @@ function buildName(firstName: string, lastname?: string){
     console.log(lastname ? firstName + "" + lastname : firstName)
 }
 
-let res1 = buildName("鸣","人"); // 鸣人
-let res2 = buildName("鸣"); // 鸣
+let res1 = buildName("鸣","人"); // 鸣人
+let res2 = buildName("鸣"); // 鸣
 let res3 = buildName("鸣", "人", "君"); // Supplied parameters do not match any signature of call target.
 ```
 如果带默认值的参数出现在必须参数前面，用户必须明确的传入 undefined 值来获得默认值。 例如，我们重写上例子，让 firstName 是带默认值的参数：
@@ -112,7 +112,7 @@ function buildName2(firstName = "鸣", lastName?: string){
     console.log(firstName + "" + lastName)
 }
 
-let res4 = buildName2("人"); // undefined人
+let res4 = buildName2("人"); // undefined人
 let res5 = buildName2(undefined, "人"); // 鸣人
 ```
 
@@ -136,7 +136,7 @@ class Person{
 let person:Person = new Person('muyy',23)
 console.log(person.print()) // muyy23
 ```
-我们在引用任何一个类成员的时候都用了 this。 它表示我们访问的是类的成员。其实这本质上还是 ES6 的知识，只是在 ES6 的基础上多上了对 this 字段和引用参数的类型声明。
+我们在引用任何一个类成员的时候都用了 this。 它表示我们访问的是类的成员。其实这本质上还是 ES6 的知识，只是在 ES6 的基础上多上了对 this 字段和引用参数的类型声明。
 
 ### 继承
 ```ts
@@ -166,7 +166,7 @@ class Student extends Person{
 var student = new Student("male");
 student.tell();  // muyy23male
 ```
-这个例子展示了 TypeScript 中继承的一些特征，可以看到其实也是 ES6 的知识上加上类型声明。不过这里多了一个知识点 —— 公共，私有，以及受保护的修饰符。TypeScript 里，成员默认为 public ；当成员被标记成 private 时，它就不能在声明它的类的外部访问；protected 修饰符与private 修饰符的行为很相似，但有一点不同，protected 成员在派生类中仍然可以访问。
+这个例子展示了 TypeScript 中继承的一些特征，可以看到其实也是 ES6 的知识上加上类型声明。不过这里多了一个知识点 —— 公共，私有，以及受保护的修饰符。TypeScript 里，成员默认为 public ；当成员被标记成 private 时，它就不能在声明它的类的外部访问；protected 修饰符与private 修饰符的行为很相似，但有一点不同，protected 成员在派生类中仍然可以访问。
 
 ### 存储器
 TypeScript 支持通过 getters/setters 来截取对对象成员的访问。 它能帮助你有效的控制对对象成员的访问。
@@ -202,7 +202,7 @@ console.log(hello.name); // muyy
 ```
 
 ## 接口
-### 接口
+### 接口
 TypeScript的核心原则之一是对值所具有的结构进行类型检查。在TypeScript里，接口的作用就是为这些类型命名和为你的代码或第三方代码定义契约。
 ```ts
 interface LabelValue{
@@ -344,8 +344,8 @@ export class zipCode implements StringValidator{
 软件工程中，我们不仅要创建一致的定义良好的 API ，同时也要考虑可重用性。 组件不仅能够支持当前的数据类型，同时也能支持未来的数据类型，这在创建大型系统时为你提供了十分灵活的功能。
 在像 C# 和 Java 这样的语言中，可以使用泛型来创建可重用的组件，一个组件可以支持多种类型的数据。 这样用户就可以以自己的数据类型来使用组件。
 
-### 初探泛型
-如下代码，我们给 Hello 函数添加了类型变量 T ，T 帮助我们捕获用户传入的类型（比如：string）。我们把这个版本的 Hello 函数叫做泛型，因为它可以适用于多个类型。 代码中 `output` 和 `output2` 是效果是相同的，第二种方法更加普遍，利用了类型推论 —— 即编译器会根据传入的参数自动地帮助我们确定T的类型：
+### 初探泛型
+如下代码，我们给 Hello 函数添加了类型变量 T ，T 帮助我们捕获用户传入的类型（比如：string）。我们把这个版本的 Hello 函数叫做泛型，因为它可以适用于多个类型。 代码中 `output` 和 `output2` 是效果是相同的，第二种方法更加普遍，利用了类型推论 —— 即编译器会根据传入的参数自动地帮助我们确定T的类型：
 ```ts
 function Hello<T>(arg:T):T{
     return arg;

@@ -9,7 +9,7 @@ categories: ['Node.js']
 
 ![](http://oqhtscus0.bkt.clouddn.com/d2867e4c299fe6b1f84d9610a6af1eb5.jpg-muyy)
 
-提到 Node.js, 我们脑海就会浮现异步、非阻塞、单线程等关键词，进一步我们还会想到 buffer、模块机制、事件循环、进程、V8、libuv 等知识点。本文起初旨在理顺 Node.js 以上易混淆概念，然而一入异步深似海，本文尝试基于 Node.js 的异步展开讨论，其他的主题只能日后慢慢补上了。(附：亦可以把本文当作是朴灵老师所著的《深入浅出 Node.js》一书的小结)。
+提到 Node.js, 我们脑海就会浮现异步、非阻塞、单线程等关键词，进一步我们还会想到 buffer、模块机制、事件循环、进程、V8、libuv 等知识点。本文起初旨在理顺 Node.js 以上易混淆概念，然而一入异步深似海，本文尝试基于 Node.js 的异步展开讨论，其他的主题只能日后慢慢补上了。(附：亦可以把本文当作是朴灵老师所著的《深入浅出 Node.js》一书的小结)。
 
 <!-- more -->
 
@@ -18,11 +18,11 @@ categories: ['Node.js']
 Node.js 正是依靠构建了一套完善的高性能异步 I/O 框架，从而打破了 JavaScript 在服务器端止步不前的局面。
 
 ### 异步 I/O VS 非阻塞 I/O
-听起来异步和非阻塞，同步和阻塞是相互对应的，从实际效果而言，异步和非阻塞都达到了我们并行 I/O 的目的，但是从计算机内核 I/O 而言，异步/同步和阻塞/非阻塞实际上是两回事。
+听起来异步和非阻塞，同步和阻塞是相互对应的，从实际效果而言，异步和非阻塞都达到了我们并行 I/O 的目的，但是从计算机内核 I/O 而言，异步/同步和阻塞/非阻塞实际上是两回事。
 
 注意，操作系统内核对于 I/O 只有两种方式：阻塞与非阻塞。
 
-调用阻塞 I/O 的过程：
+调用阻塞 I/O 的过程：
 
 ![](http://oqhtscus0.bkt.clouddn.com/886fcdd67d943f63951b0e3bb6dd6e43.jpg-200)
 
@@ -30,18 +30,18 @@ Node.js 正是依靠构建了一套完善的高性能异步 I/O 框架，从而�
 
 ![](http://oqhtscus0.bkt.clouddn.com/38f95c2e0b80e6edb511cf32b8973b90.jpg-200)
 
-在此先引人一个叫作`轮询`的技术。轮询不同于回调，举个生活例子，你有事去隔壁寝室找同学，发现人不在，你怎么办呢？方法1，每隔几分钟再去趟隔壁寝室，看人在不；方法2，拜托与他同寝室的人，看到他回来时叫一下你；那么前者是轮询，后者是回调。
+在此先引人一个叫作`轮询`的技术。轮询不同于回调，举个生活例子，你有事去隔壁寝室找同学，发现人不在，你怎么办呢？方法1，每隔几分钟再去趟隔壁寝室，看人在不；方法2，拜托与他同寝室的人，看到他回来时叫一下你；那么前者是轮询，后者是回调。
 
-再回到主题，阻塞 I/O 造成 CPU 等待浪费，非阻塞 I/O 带来的麻烦却是需要轮询去确认是否完全完成数据获取。`从操作系统的这个层面上看，对于应用程序而言，不管是阻塞 I/O 亦或是 非阻塞 I/O，它们都只能是一种同步`，因为尽管使用了轮询技术，应用程序仍然需要等待 I/O 完全返回。
+再回到主题，阻塞 I/O 造成 CPU 等待浪费，非阻塞 I/O 带来的麻烦却是需要轮询去确认是否完全完成数据获取。`从操作系统的这个层面上看，对于应用程序而言，不管是阻塞 I/O 亦或是 非阻塞 I/O，它们都只能是一种同步`，因为尽管使用了轮询技术，应用程序仍然需要等待 I/O 完全返回。
 
 ### Node 的异步 I/O
 
-完成整个异步 I/O 环节的有事件循环、观察者、请求对象以及 I/O 线程池。
+完成整个异步 I/O 环节的有事件循环、观察者、请求对象以及 I/O 线程池。
 
 ![](http://oqhtscus0.bkt.clouddn.com/34ce4a4c1e2f298811565f15cd2318be.jpg-300)
 
 
-#### 事件循环
+#### 事件循环
 
 在进程启动的时候，Node 会创建一个类似于 whlie(true) 的循环，每一次执行循环体的过程我们称为 Tick。
 
@@ -89,7 +89,7 @@ fs.open = function(path, flags, mode, callback) {
 
 从前面的代码中可以看到，JavaScript 层面的代码通过调用 C++ 核心模块进行下层的操作。
 
-从 JavaScript 调用 Node 的核心模块，核心模块调用 C++ 内建模块，内建模块通过 libuv 进行系统调用，这是 Node 里经典的调用方式。
+从 JavaScript 调用 Node 的核心模块，核心模块调用 C++ 内建模块，内建模块通过 libuv 进行系统调用，这是 Node 里经典的调用方式。
 
 libuv 作为封装层，有两个平台的实现，实质上是调用了 uv_fs_open 方法，在 uv_fs_open 的调用过程中，会创建一个 FSReqWrap 请求对象，从 JavaScript 层传入的参数和当前方法都被封装在这个请求对象中。回调函数则被设置在这个对象的 oncomplete_sym 属性上。
 
@@ -113,11 +113,11 @@ I/O 观察者回调函数的行为就是取出请求对象的 `result` 属性作
 
 #### 小结
 
-通过介绍完整个异步 I/O 后，有个需要重视的观点是 JavaScript 是单线程的，`Node 本身其实是多线程的`，只是 I/O 线程使用的 CPU 比较少；还有个重要的观点是，除了用户的代码无法并行执行外，所有的 I/O (磁盘 I/O 和网络 I/O) 则是可以并行起来的。
+通过介绍完整个异步 I/O 后，有个需要重视的观点是 JavaScript 是单线程的，`Node 本身其实是多线程的`，只是 I/O 线程使用的 CPU 比较少；还有个重要的观点是，除了用户的代码无法并行执行外，所有的 I/O (磁盘 I/O 和网络 I/O) 则是可以并行起来的。
 
 ## 异步编程
 
-Node 是首个将异步大规模带到应用层面的平台。通过上文所述我们了解了 Node 如何通过事件循环实现异步 I/O，有异步 I/O 必然存在异步编程。异步编程的路经历了太多坎坷，从回调函数、发布订阅模式、Promise 对象，到 generator、asycn/await。趁着异步编程这个主题刚好把它们串起来理理。
+Node 是首个将异步大规模带到应用层面的平台。通过上文所述我们了解了 Node 如何通过事件循环实现异步 I/O，有异步 I/O 必然存在异步编程。异步编程的路经历了太多坎坷，从回调函数、发布订阅模式、Promise 对象，到 generator、asycn/await。趁着异步编程这个主题刚好把它们串起来理理。
 
 ### 异步 VS 回调
 对于刚接触异步的新人，很大几率会混淆回调 (callback) 和异步 (asynchronous) 的概念。先来看看维基的 [Callback](https://en.wikipedia.org/wiki/Callback_(computer_programming)) 条目:
@@ -159,7 +159,7 @@ f1(f2)  // 得到的结果是 f1 finished, f2 finished
 ```
 ![](http://oqhtscus0.bkt.clouddn.com/43197a40f5c53e8a248f5c8de68e1e81.jpg-200)
 
-小结：回调可以进行同步也可以异步调用，但是 Node.js 提供的 API 大多都是异步回调的，比如 buffer、http、cluster 等模块。
+小结：回调可以进行同步也可以异步调用，但是 Node.js 提供的 API 大多都是异步回调的，比如 buffer、http、cluster 等模块。
 
 ### 发布/订阅模式
 
@@ -286,9 +286,9 @@ Promise.prototype.then = function (fulfilledHandler, errorHandler, progressHandl
 }
 ```
 
-如上 Promise 的代码就完成了，但是别忘了 Promise/Deferred 中的后者 Deferred，为了完成 Promise 的整个流程，我们还需要触发执行上述回调函数的地方，实现这些功能的对象就叫作 Deferred，即延迟对象。
+如上 Promise 的代码就完成了，但是别忘了 Promise/Deferred 中的后者 Deferred，为了完成 Promise 的整个流程，我们还需要触发执行上述回调函数的地方，实现这些功能的对象就叫作 Deferred，即延迟对象。
 
-Promise 和 Deferred 的整体关系如下图所示，从中可知，Deferred 主要用于内部来维护异步模型的状态；而 Promise 则作用于外部，通过 then() 方法暴露给外部以添加自定义逻辑。
+Promise 和 Deferred 的整体关系如下图所示，从中可知，Deferred 主要用于内部来维护异步模型的状态；而 Promise 则作用于外部，通过 then() 方法暴露给外部以添加自定义逻辑。
 
 ![](http://oqhtscus0.bkt.clouddn.com/f461de8674e1268ec19470534a07320a.jpg-400)
 
@@ -306,7 +306,7 @@ Deferred.prototype.resolve = function(obj) {
   while(handler = promise.queue.shift()) {
     if (handler && handler.fulfilled) {
       var ret = handler.fulfilled(obj)
-      if (ret && ret.isPromise) { // 这一行以及后面3行的意思是：一旦检测到返回了新的 Promise 对象，停止执行，然后将当前 Deferred 对象的 promise 引用改变为新的 Promise 对象，并将队列中余下的回调转交给它
+      if (ret && ret.isPromise) { // 这一行以及后面3行的意思是：一旦检测到返回了新的 Promise 对象，停止执行，然后将当前 Deferred 对象的 promise 引用改变为新的 Promise 对象，并将队列中余下的回调转交给它
         ret.queue = promise.queue
         this.promise = ret
         return
@@ -343,7 +343,7 @@ Deferred.prototype.callback = function() {
 }
 ```
 
-接着我们以两次文件读取作为例子，来验证该设计的可行性。这里假设第二个文件读取依赖于第一个文件中的内容，相关代码如下：
+接着我们以两次文件读取作为例子，来验证该设计的可行性。这里假设第二个文件读取依赖于第一个文件中的内容，相关代码如下：
 
 ```js
 var readFile1 = function(file, encoding) {
@@ -365,12 +365,12 @@ readFile1('./file1.txt', 'utf8').then(function(file1) { // 这里通过 then 把
 })
 ```
 
-最后可以看到控制台输出 `I am file2`，验证成功~，这个案例的完整代码可以[点这里查看](https://github.com/MuYunyun/demos-of-node.js/blob/master/promise/sequence.js)，并建议使用 [node-inspector](https://github.com/node-inspector/node-inspector) 进行断点观察，(这段代码里面有些逻辑确实很绕，通过断点调试就能较容易理解了)。
+最后可以看到控制台输出 `I am file2`，验证成功~，这个案例的完整代码可以[点这里查看](https://github.com/MuYunyun/demos-of-node.js/blob/master/promise/sequence.js)，并建议使用 [node-inspector](https://github.com/node-inspector/node-inspector) 进行断点观察，(这段代码里面有些逻辑确实很绕，通过断点调试就能较容易理解了)。
 
 从 Promise 链式调用可以清晰地看到队列(先进先出)的知识，其有如下两个核心步骤：
 
 * 将所有的回调都存到队列中；
-* Promise 完成时，逐个执行回调，一旦检测到返回了新的 Promise 对象，停止执行，然后将当前 Deferred 对象的 promise 引用改变为新的 Promise 对象，并将队列中余下的回调转交给它；
+* Promise 完成时，逐个执行回调，一旦检测到返回了新的 Promise 对象，停止执行，然后将当前 Deferred 对象的 promise 引用改变为新的 Promise 对象，并将队列中余下的回调转交给它；
 
 至此，实现了 Promise/Deferred 的完整逻辑，Promise 的其他知识未来也会继续探究。
 
