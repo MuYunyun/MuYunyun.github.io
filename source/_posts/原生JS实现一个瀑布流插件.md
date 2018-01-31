@@ -13,7 +13,7 @@ date: 2018-01-30 00:57:46
 
 ![](http://oqhtscus0.bkt.clouddn.com/74f00b858ebdc430e780aa1da6ca0ce1.jpg-muyy)
 
-瀑布流布局中的图片有一个核心特点 —— 等宽不定等高，瀑布流布局在国内网网站都有一定规模的使用，比如[pinterest](https://www.pinterest.com/)、[花瓣网](http://huaban.com/)等等。那么接下来就基于这个特点开始瀑布流探索之旅。
+瀑布流布局中的图片有一个核心特点 —— 等宽不定等高，瀑布流布局在国内外网站都有一定规模的使用，比如[pinterest](https://www.pinterest.com/)、[花瓣网](http://huaban.com/)等等。那么接下来就基于这个特点开始瀑布流探索之旅。
 
 <!-- more -->
 
