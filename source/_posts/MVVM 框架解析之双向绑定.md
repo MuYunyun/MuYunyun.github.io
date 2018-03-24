@@ -250,7 +250,7 @@ Compile.prototype = {
 }
 ```
 
-这个简单的 mvvm 框架在对 fragment 编译解析的过程中对 `{{}} 文本元素`、`v-on:click 事件指令`、`v-model 指令`三种类型进行了相应的处理。
+这个简单的 mvvm 框架在对 fragment 编译解析的过程中对 `{% raw %}{{}}{% endraw %} 文本元素`、`v-on:click 事件指令`、`v-model 指令`三种类型进行了相应的处理。
 
 ```js
 Compile.prototype = {
@@ -263,7 +263,7 @@ Compile.prototype = {
   },
   nodeToFragment: function(el) {...},
   compileElement: function(el) {...},
-  compileText: function (node, exp) { // 对文本类型进行处理，将 {{abc}} 替换掉
+  compileText: function (node, exp) { // 对文本类型进行处理替换
     const self = this
     const initText = this.vm[exp]
     this.updateText(node, initText) // 初始化
