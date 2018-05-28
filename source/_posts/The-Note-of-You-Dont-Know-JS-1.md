@@ -346,7 +346,21 @@ let a = {
 * 浅复制：如果修改了 b.name, a.name 不会改变，但是修改 b.habits 数组中的值，a.habits 的值也会改变
 * 深复制：b 的值改变，不会对 a 产生任何影响
 
-再来看下这个对象：
+对于 JSON 安全的对象(就是能用 JSON.stringify 序列号的字符串)来说，有一种巧妙的深复制方法：
+
+``` js
+var newObj = JSON.parse( JSON.stringify(someObj) )
+```
+
+但是这个方法存在以下坑：
+
+1. 如果对象里面有循环引用，会抛错
+
+2. 不能复制对象里面的 Date、Function、RegExp
+
+3. 所有的构造函数会指向 Object
+
+看下面这个对象：
 ``` js
 function anotherFunction() { /*..*/ }
 
@@ -367,10 +381,10 @@ anotherArray.push( myObject )
 ```
 如何准确地表示 myObject 的复制呢？
 
-这个例子中除了复制 myObject 以外还会复制 anotherArray。这时问题就来了，anotherArray 引用了 myObject, 所以又需要复制 myObject，这样就会由于循环引用导致死循环。对于 JSON 安全的对象(就是能用 JSON.stringify 序列号的字符串)来说，有一种巧妙的深复制方法：
-``` js
-var newObj = JSON.parse( JSON.stringify(someObj) )
-```
+这个例子中除了复制 myObject 以外还会复制 anotherArray。这时问题就来了，anotherArray 引用了 myObject, 所以又需要复制 myObject，这样就会由于循环引用导致死循环。该如何解决呢？
+
+可以查看在 [diana 库中的实践](https://github.com/MuYunyun/diana/blob/master/src/common/lang/cloneDeep.js)。
+
 相比于深复制，浅复制非常易懂并且问题要少得多，ES6 定义了 Object.assign(..) 方法来实现浅复制。 Object.assign(..) 方法的第一个参数是目标对象，之后还可以跟一个或多个源对象。它会遍历一个或多个源对象的所有可枚举的自由键并把它们复制到目标对象，最后返回目标对象，就像这样：
 ``` js
 var newObj = Object.assign( {}, myObject );
@@ -397,19 +411,22 @@ Foo.prototype.blah = ...;
 
 var a = new Foo();
 ```
-我们如何找出 a 的“祖先”（委托关系）呢？
+我们如何找出 a 的 “祖先”（委托关系）呢？
 * 方法一：`a instanceof Foo; // true` (对象 instanceof 函数)
 * 方法二: `Foo.prototype.isPrototypeOf(a); // true` (对象 isPrototypeOf 对象)
 * 方法三: `Object.getPrototypeOf(a) === Foo.prototype; // true` (Object.getPrototypeOf() 可以获取一个对象的 [[Prototype]]) 链;
 * 方法四: `a.__proto__ == Foo.prototype; // true`
 
 ### 构造函数
+
 * 函数不是构造函数，而是当且仅当使用 new 时，函数调用会变成“构造函数调用”。
 * 使用 new 会在 prototype 生成一个 constructor 属性，指向构造调用的函数。
 * constructor 并不表示被构造，而且 constructor 属性并不是一个不可变属性，它是不可枚举的，但它是可以被修改的。
 
 ### 对象关联
+
 来看下面的代码：
+
 ``` js
 var foo = {
   something: function() {

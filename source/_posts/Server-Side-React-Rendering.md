@@ -109,7 +109,6 @@ npm run start
 
 接下来，我们将实现服务器端渲染，以便将完全生成的HTML发送到浏览器。如果要同时查看所有更改，请查看[GitHub上的差异](https://github.com/ButterCMS/react-ssr-example/commit/525c625b0f65489050983ed03b52bb7770ce6b7a)。
 
-To get started, we'll install Express, a Node.js server side application framework:
 开始前，让我们安装 Express，一个 Node.js 的服务器端应用程序框架：
 
 ```
@@ -167,7 +166,6 @@ ReactDOMServer.renderToString(<Hello />);
 const document = data.replace(/<div id="app"><\/div>/,`<div id="app">${html}</div>`);
 ```
 
-To start the server, update the start script in package.json and then run npm run start:
 要启动服务器，请更新 \`package.json\` 中的起始脚本，然后运行 `npm run start` :
 
 ```
@@ -187,7 +185,6 @@ To start the server, update the start script in package.json and then run npm ru
 
 要解决这个问题，我们需要在渲染 Hello 组件之前确保 API 请求完成。这意味着要使 API 请求跳出 React 的组件渲染循环，并在渲染组件之前获取数据。我们将逐步介绍这一步，但您可以在[GitHub上查看完整的差异](https://github.com/ButterCMS/react-ssr-example/commit/5fdd453e31ab08dfdc8b44261696d4ed89fbb719)。
 
-To move data fetching before rendering, we'll install react-transmit:
 要在渲染之前获取数据，我们需安装 [react-transmit](https://github.com/RickWong/react-transmit)：
 
 ```
