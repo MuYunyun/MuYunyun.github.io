@@ -255,13 +255,12 @@ Promise 的状态转化示意图如下：
 除此之外，Promise 对象的另一个关键就是需要具备 then() 方法，对于 then() 方法，有以下简单的要求:
 
 * 接受完成态、错误态的回调方法。在操作完成或出现错误时，将会调用对应方法。
-* 可选地支持 progress 事件回调作为第三个方法。
 * then() 方法只接受 function 对象，其余对象将被忽略。
 * then() 方法继续返回 Promise 对象，已实现链式调用。
 
 then() 方法的定义如下：
 ```js
-then(fulfilledHandler, errorHandler, progressHandler)
+then(fulfilledHandler, errorHandler)
 ```
 
 有了这些核心知识，接着进入 Promise/Deferred 核心代码环节：
@@ -273,7 +272,7 @@ var Promise = function() { // 构建 Promise 对象
   this.isPromise = true
 }
 
-Promise.prototype.then = function (fulfilledHandler, errorHandler, progressHandler) { // 构建 Progress 的 then 方法
+Promise.prototype.then = function (fulfilledHandler, errorHandler) { // 构建 Progress 的 then 方法
   var handler = {}
   if (typeof fulfilledHandler === 'function') {
     handler.fulfilled = fulfilledHandler
