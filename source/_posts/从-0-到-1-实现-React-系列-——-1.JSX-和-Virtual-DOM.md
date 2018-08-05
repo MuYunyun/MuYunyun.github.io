@@ -1,5 +1,5 @@
 ---
-title: 从 0 到 1 实现 React 系列 —— JSX 和 Virtual DOM
+title: 从 0 到 1 实现 React 系列 —— 1.JSX 和 Virtual DOM
 copyright: true
 tags:
   - React
@@ -11,9 +11,14 @@ date: 2018-07-06 16:01:10
 
 ![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
-看源码一个痛处是会陷进理不顺主干的困局中，本系列文章在实现一个 (x)react 的同时理顺 React 框架的主干内容(JSX/虚拟DOM/组件/生命周期/diff算法/...)
+看源码一个痛处是会陷进理不顺主干的困局中，本系列文章在实现一个 (x)react 的同时理顺 React 框架的主干内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/ref/...)
 
 <!--more-->
+
+* [从 0 到 1 实现 React 系列 —— JSX 和 Virtual DOM](https://github.com/MuYunyun/blog/issues/24)
+* [从 0 到 1 实现 React 系列 —— 组件和 state|props](https://github.com/MuYunyun/blog/issues/25)
+* [从 0 到 1 实现 React 系列 —— 生命周期和 diff 算法](https://github.com/MuYunyun/blog/issues/26)
+* [从 0 到 1 实现 React 系列 —— 优化 setState 和 ref 的实现](https://github.com/MuYunyun/blog/issues/27)
 
 ### 环境准备
 
@@ -221,4 +226,6 @@ render(<A />, document.body) // 组件的挂载
 
 该系列文章会尽可能的分析项目细节，具体的还是以项目实际代码为准。
 
-[项目地址](https://github.com/MuYunyun/cpreact)
+[项目地址](https://github.com/MuYunyun/cpreact)，[关于如何 pr](https://github.com/MuYunyun/cpreact/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
+
+本系列文章拜读和借鉴了 [simple-react](https://github.com/hujiulong/simple-react)，在此特别感谢 [Jiulong Hu](https://github.com/hujiulong) 的分享。
