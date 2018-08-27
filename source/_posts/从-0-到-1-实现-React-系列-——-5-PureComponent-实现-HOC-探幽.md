@@ -11,7 +11,7 @@ date: 2018-08-27 11:39:06
 
 ![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
-本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...)
+本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
 <!--more-->
 
@@ -293,6 +293,9 @@ class B extends Component {
 ![](http://oqhtscus0.bkt.clouddn.com/e7dbedcefd9a61dcd12fbcff89dc19ef.jpg-200)
 
 > 可能会有疑惑，使用`属性代理`的方式貌似也能实现渲染劫持呀，但是那样做没有`继承反转`这种方式纯粹。
+
+### 鸣谢
+Especially thank [simple-react](https://github.com/hujiulong/simple-react) for the guidance function of this library. At the meantime，respect for [preact](https://github.com/developit/preact) and [react](https://github.com/facebook/react)
 
 ### 相关链接
 

@@ -11,7 +11,7 @@ date: 2018-07-06 16:01:10
 
 ![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
-本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...)
+本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
 <!--more-->
 
@@ -227,6 +227,5 @@ render(<A />, document.body) // 组件的挂载
 
 该系列文章会尽可能的分析项目细节，具体的还是以项目实际代码为准。
 
-[项目地址](https://github.com/MuYunyun/cpreact)，[关于如何 pr](https://github.com/MuYunyun/cpreact/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
-
-本系列文章拜读和借鉴了 [simple-react](https://github.com/hujiulong/simple-react)，在此特别感谢 [Jiulong Hu](https://github.com/hujiulong) 的分享。
+### 鸣谢
+Especially thank [simple-react](https://github.com/hujiulong/simple-react) for the guidance function of this library. At the meantime，respect for [preact](https://github.com/developit/preact) and [react](https://github.com/facebook/react)
