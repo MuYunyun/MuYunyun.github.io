@@ -11,7 +11,7 @@ date: 2018-07-12 10:03:17
 
 ![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
-看源码一个痛处是会陷进理不顺主干的困局中，本系列文章在实现一个 (x)react 的同时理顺 React 框架的主干内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/ref/...)
+本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...)
 
 <!--more-->
 
@@ -19,6 +19,7 @@ date: 2018-07-12 10:03:17
 * [从 0 到 1 实现 React 系列 —— 组件和 state|props](https://github.com/MuYunyun/blog/issues/25)
 * [从 0 到 1 实现 React 系列 —— 生命周期和 diff 算法](https://github.com/MuYunyun/blog/issues/26)
 * [从 0 到 1 实现 React 系列 —— 优化 setState 和 ref 的实现](https://github.com/MuYunyun/blog/issues/27)
+* [从 0 到 1 实现 React 系列 —— PureComponent 实现 && HOC 探幽](https://github.com/MuYunyun/blog/issues/29)
 
 ### 组件即函数
 
@@ -241,6 +242,67 @@ ReactDOM.render(
 ![](http://oqhtscus0.bkt.clouddn.com/reactsetstate.gif)
 
 至此，我们实现了 props 和 state 部分的逻辑。
+
+### forceUpdate 的实现
+
+> 声明：这部分为补充章节，可以选择性阅读。涉及到后文[生命周期](https://github.com/MuYunyun/blog/blob/master/BasicSkill/从0到1实现React/3.生命周期.md)、[setState](https://github.com/MuYunyun/blog/blob/master/BasicSkill/从0到1实现React/5.setState.md) 章节的知识点。
+
+当没有使用 setState 更新 state 状态时，通常要结合 forceUpdate 一起使用，例子如下：
+
+```js
+class B extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      count: {
+        value: 1
+      }
+    }
+  }
+
+  shouldComponentUpdate() { // 当使用 forceUpdate() 时，shouldComponentUpdate() 会失效
+    return false
+  }
+
+  click() {
+    this.state.count.value = ++this.state.count.value // 没有使用 setState 更新 state 状态时，通常要结合 forceUpdate 一起使用
+    this.forceUpdate()
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.click.bind(this)}>Click Me!</button>
+        <div>{this.state.count.value}</div>
+      </div>
+    )
+  }
+}
+```
+
+这里要注意一个点`当使用 forceUpdate() 时，shouldComponentUpdate() 会失效`，下面我们来补充 forceUpdate() 的代码逻辑：
+
+```js
+// force to update
+Component.prototype.forceUpdate = function(cb) {
+  this.allowShouldComponentUpdate = false // 不允许 allowShouldComponentUpdate 执行
+  asyncRender({}, this, cb)
+}
+```
+
+相应的在 render.js 中加上 allowShouldComponentUpdate 的判断条件：
+
+```js
+function renderComponent(component) {
+  if (component.base && component.shouldComponentUpdate && component.allowShouldComponentUpdate !== false) { // 加上 allowShouldComponentUpdate 的判断条件
+    const bool = component.shouldComponentUpdate(component.props, component.state)
+    if (!bool && bool !== undefined) {
+      return false // shouldComponentUpdate() 返回 false，则生命周期终止
+    }
+  }
+  ...
+}
+```
 
 ### 小结
 
