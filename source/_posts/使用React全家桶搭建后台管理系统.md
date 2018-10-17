@@ -6,7 +6,7 @@ date: 2017-06-15 01:16:07
 tags: ['React','Redux']
 categories: ['React']
 ---
-![](http://oqhtscus0.bkt.clouddn.com/007a8b596b798249ed85d11307c959cb.jpg-muyy)
+![](http://muyy.withyoufriends.com/007a8b596b798249ed85d11307c959cb.jpg-muyy)
 
 使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。
 <!--more-->
@@ -194,7 +194,7 @@ fetchJsonp(url,{method: 'GET'})
 ### Redux
 使用了redux也已经有段时日了，我对redux的定义就是更好的管理组件的状态，一旦应用的逻辑复杂起来，各种组件状态、界面耦合起来，就容易出岔子，redux就是为了解决这个而诞生的，让我们可以更多地关注UI层，而降低对状态的关注。
 
-![](http://oqhtscus0.bkt.clouddn.com/a40c3540ca26a56b28506d14125c04c1.jpg-400)
+![](http://muyy.withyoufriends.com/a40c3540ca26a56b28506d14125c04c1.jpg-400)
 
 画了一幅比较简陋的图来说明 redux 的大致流程，假设首先通过鼠标点击页面上的按钮触发了一个行为(action)，这时我们叫了一辆出租车 dispatch() 将这个 action 带到了终点站 store。这时候 store 就会通过 reducer 函数返回一个新的状态 state，从而改变 UI 显示。之前也写了篇[深入Redux架构](http://www.cnblogs.com/MuYunyun/p/6530715.html)
 

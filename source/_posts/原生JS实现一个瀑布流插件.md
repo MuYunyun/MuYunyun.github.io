@@ -11,7 +11,7 @@ abbrlink: 16b9cce7
 date: 2018-01-30 00:57:46
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/74f00b858ebdc430e780aa1da6ca0ce1.jpg-muyy)
+![](http://muyy.withyoufriends.com/74f00b858ebdc430e780aa1da6ca0ce1.jpg-muyy)
 
 瀑布流布局中的图片有一个核心特点 —— 等宽不定等高，瀑布流布局在国内外网站都有一定规模的使用，比如[pinterest](https://www.pinterest.com/)、[花瓣网](http://huaban.com/)等等。那么接下来就基于这个特点开始瀑布流探索之旅。
 
@@ -44,7 +44,7 @@ date: 2018-01-30 00:57:46
   </div>
 ```
 
-![](http://oqhtscus0.bkt.clouddn.com/88935550542f9cc012151460095d9579.jpg-300)
+![](http://muyy.withyoufriends.com/88935550542f9cc012151460095d9579.jpg-300)
 
 由于未知的 css 知识点，丝袜最长的妹子把下面的空间都占用掉了。。。
 
@@ -86,13 +86,13 @@ Waterfall.prototype.init = function () {
 
 至此完成了瀑布流的基本布局，效果图如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/74f00b858ebdc430e780aa1da6ca0ce1.jpg-300)
+![](http://muyy.withyoufriends.com/74f00b858ebdc430e780aa1da6ca0ce1.jpg-300)
 
 ### scroll、resize 事件监听的实现
 
 实现了初始化函数 init 以后，下一步就要实现对 scroll 滚动事件进行监听，从而实现当滚到父节点的底部有源源不断的图片被加载出来的效果。这时候要考虑一个点，是滚动到什么位置时触发加载函数呢？这个因人而异，我的做法是当满足 `父容器高度 + 滚动距离 > 最后一张图片的 offsetTop` 这个条件，即橙色线条 + 紫色线条 > 蓝色线条时触发加载函数，代码如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/c8cda4bb070a7739eeec0fc968e91a1b.jpg-300)
+![](http://muyy.withyoufriends.com/c8cda4bb070a7739eeec0fc968e91a1b.jpg-300)
 
 ```js
 window.onscroll = function() {

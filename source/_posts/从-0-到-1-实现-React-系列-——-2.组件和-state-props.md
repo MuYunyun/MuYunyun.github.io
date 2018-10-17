@@ -9,7 +9,7 @@ abbrlink: a40f0b93
 date: 2018-07-12 10:03:17
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
+![](http://muyy.withyoufriends.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
 本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
@@ -239,7 +239,7 @@ ReactDOM.render(
 
 效果图如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/reactsetstate.gif)
+![](http://muyy.withyoufriends.com/reactsetstate.gif)
 
 至此，我们实现了 props 和 state 部分的逻辑。
 

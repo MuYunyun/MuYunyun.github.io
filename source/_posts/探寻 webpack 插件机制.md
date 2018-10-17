@@ -7,7 +7,7 @@ tags: ['webpack']
 categories: ['webpack']
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/1b98cd5742c64a67d9bd49b4ea1ed206.jpg-muyy)
+![](http://muyy.withyoufriends.com/1b98cd5742c64a67d9bd49b4ea1ed206.jpg-muyy)
 
 webpack 可谓是让人欣喜又让人忧，功能强大但需要一定的学习成本。在探寻 webpack 插件机制前，首先需要了解一件有意思的事情，webpack 插件机制是整个 webpack 工具的骨架，而 webpack 本身也是利用这套插件机制构建出来的。因此在深入认识 webpack 插件机制后，再来进行项目的相关优化，想必会大有裨益。
 
@@ -186,7 +186,7 @@ this.hooks.emit.callAsync(compilation, err => {
 
 结合上述知识点的分析，不难写出自己的 webpack 插件，关键在于想法。为了统计项目中 webpack 各包的有效使用情况，在 fork [webpack-visualizer](https://github.com/chrisbateman/webpack-visualizer) 的基础上对代码升级了一番，[项目地址](https://github.com/MuYunyun/analyze-webpack-plugin)。效果如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/329ec042a73aecd0a1947bdcc1f0dcb4.jpg-400)
+![](http://muyy.withyoufriends.com/329ec042a73aecd0a1947bdcc1f0dcb4.jpg-400)
 
 插件核心代码正是基于上文提到的 emit 钩子，以及 compiler 和 compilation 对象。代码如下：
 

@@ -7,7 +7,7 @@ tags: ['redux', 'redux-middleware', 'redux-thunk']
 categories: ['redux']
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/39bbe72c55363dedf1f69673a58e01cb.jpg-muyy)
+![](http://muyy.withyoufriends.com/39bbe72c55363dedf1f69673a58e01cb.jpg-muyy)
 
 <!--more-->
 
@@ -15,7 +15,7 @@ categories: ['redux']
 
 在业务中需要打印每一个 action 信息来调试，又或者希望 dispatch 或 reducer 拥有异步请求的功能。面对这些场景时，一个个修改 dispatch 或 reducer 代码有些乏力，我们需要一个可组合的、自由增减的插件机制，Redux 借鉴了 Koa 中 middleware 的思想，利用它我们可以在前端应用中便捷地实现如日志打印、异步请求等功能。
 
-![](http://oqhtscus0.bkt.clouddn.com/4ab33429ea461ba24367cc062039836c.jpg-200)
+![](http://muyy.withyoufriends.com/4ab33429ea461ba24367cc062039836c.jpg-200)
 
 比如在[项目](https://github.com/MuYunyun/reactSPA/blob/274c00870853638fb0f77df8497f911eb560b617/src/client/store/configureStore.dev.js#L14)中，进行了如下调用后，redux 就集成了 thunk 函数调用以及打印日志的功能。
 
@@ -117,7 +117,7 @@ export default function compose(...funcs) {
 
 compose 源码中的 `funcs.reduce((a, b) => (...args) => a(b(...args)))` 算是比较重要的一句，它的作用是返回组合参数后的函数，比如 compose(f, g, h) 等价于 (...args) => f(g(h(...args)))，效果图如下所示，调用 this.props.dispatch() 后，会调用相应的中间件，最终会调用 redux 原生的 store.dispatch()，并且可以看到中间件调用的形式类似数据结构中的栈(先进后出)。
 
-![](http://oqhtscus0.bkt.clouddn.com/201a9431b32d9d9ac2ad5f6712206b3a.jpg-300)
+![](http://muyy.withyoufriends.com/201a9431b32d9d9ac2ad5f6712206b3a.jpg-300)
 
 拿上个小节提到的 logger、redux-thunk 中间件为例，其 middleware 的内部串行调用方式如下，从而完成了 dispatch 功能的增强(支持如 `this.props.dispatch(func)` 的调用以及日志功能)。具体可以看 [项目中的运用](https://github.com/MuYunyun/reactSPA/blob/274c00870853638fb0f77df8497f911eb560b617/src/common/pages/music/index.js#L35)
 

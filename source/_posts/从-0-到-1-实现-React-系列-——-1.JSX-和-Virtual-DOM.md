@@ -9,7 +9,7 @@ abbrlink: e9e32d3a
 date: 2018-07-06 16:01:10
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
+![](http://muyy.withyoufriends.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
 本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
@@ -187,7 +187,7 @@ function setAttribute(dom, attr, value) {
 
 至此，我们成功将虚拟 DOM 复原为真实 DOM，展示如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/a898514bd3d08df4366e5ceb7843cddf.jpg-400)
+![](http://muyy.withyoufriends.com/a898514bd3d08df4366e5ceb7843cddf.jpg-400)
 
 另外配合热更新，在热更新的时候清空之前的 dom 元素，改动如下：
 
@@ -204,7 +204,7 @@ const ReactDOM = {
 
 `JSX` 经过 babel 编译为 React.createElement() 的形式，其返回结果就是 `Virtual DOM`，最后通过 ReactDOM.render() 将 Virtual DOM 转化为真实的 DOM 展现在界面上。流程图如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/5e451855ccc9017708b57164f9e221c6.jpg-400)
+![](http://muyy.withyoufriends.com/5e451855ccc9017708b57164f9e221c6.jpg-400)
 
 ### 思考题
 

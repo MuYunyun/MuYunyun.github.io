@@ -9,7 +9,7 @@ abbrlink: da72b66c
 date: 2018-09-18 16:00:25
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
+![](http://muyy.withyoufriends.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
 本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
@@ -87,7 +87,7 @@ const case3 = () => <input value={123} />        // 此时输入框内显示 123
 
 题目可以换个问法：当 `input` 的传入属性为 `value` 时(且没有 onChange 属性)，如何禁用用户的输入事件的同时又能获取焦点?
 
-![](http://oqhtscus0.bkt.clouddn.com/0fa301946b3f4bf315d742735c333562.jpg-200)
+![](http://muyy.withyoufriends.com/0fa301946b3f4bf315d742735c333562.jpg-200)
 
 首先想到了 html 自带属性 readonly、disable，它们都能禁止用户的输入，但是它们不能满足获取焦点这个条件。结合前文 `onChange` 的实现是监听 `input` 事件，代码分为以下两种情况：
 
@@ -139,7 +139,7 @@ const App = () => <input value={123} />
 
 效果如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/353c8119b3c60a7f8f7696633c97ad28.jpg-200)
+![](http://muyy.withyoufriends.com/353c8119b3c60a7f8f7696633c97ad28.jpg-200)
 
 ```js
 class App extends Component {
@@ -169,6 +169,6 @@ class App extends Component {
 
 效果如下：
 
-![](http://oqhtscus0.bkt.clouddn.com/aec70ef0cebf603a0871d61f21e93532.gif)
+![](http://muyy.withyoufriends.com/aec70ef0cebf603a0871d61f21e93532.gif)
 
 至此，模拟了受控组件的实现。

@@ -6,7 +6,7 @@ date: 2017-08-09 02:51:57
 tags: ['Node.js','alfred workflow']
 categories: ['Node.js']
 ---
-![](http://oqhtscus0.bkt.clouddn.com/f27594afeda6b513ffec98c3e60ccbb0.jpg-muyy)
+![](http://muyy.withyoufriends.com/f27594afeda6b513ffec98c3e60ccbb0.jpg-muyy)
 
 >  [插件地址](https://github.com/MuYunyun/commonSearch)(集成Github、掘金、知乎、淘宝等搜索)
 
@@ -14,13 +14,13 @@ categories: ['Node.js']
 <!--more-->
 
 ## 一些安利
-![](http://oqhtscus0.bkt.clouddn.com/482ccbbbcfb8f302851617a86dd6a5de.jpg-400)
+![](http://muyy.withyoufriends.com/482ccbbbcfb8f302851617a86dd6a5de.jpg-400)
 
 附上一张个人装着的插件的截图。Caffeinate 插件能在指定时间使电脑不黑屏；在 Dash 插件上能轻松查任何文档；Youdao Translate 插件比系统自带的翻译方便许多。插件也是因人而异，大家可以在 [Workflow List](http://alfredworkflow.com/) 上逛逛，各取所需。
 
 在用了别人的插件感觉高大上后，便萌发了也写一个插件的想法，计划把自己常逛的网站集合成一个插件，使用特定的缩略词便可快速进行搜索数据，又看了官方称可以使用 bash, zsh, PHP, Ruby, Python, Perl, Apple Script 开发 Alfred Workflow。于是我选择了 Node.js 作为开发语言，开发了一款 [commonSearch](https://github.com/MuYunyun/commonSearch), 开发完效果如下(集成了Github、掘金、知乎、淘宝等搜索)。
 
-![](http://oqhtscus0.bkt.clouddn.com/40a83edf9552b4a071dd2ff5093a445b.gif)
+![](http://muyy.withyoufriends.com/40a83edf9552b4a071dd2ff5093a445b.gif)
 
 ## 开发阶段
 
@@ -30,17 +30,17 @@ categories: ['Node.js']
 
 可以先参考 [如何去写一个第三方的 workflow](http://allenwu.itscoder.com/how-to-write-a-workflow-for-mac) 的开始部分, 完成基本工作流的搭建，如下图是我搭建好的基本工作流连线。
 
-![](http://oqhtscus0.bkt.clouddn.com/f27594afeda6b513ffec98c3e60ccbb0.jpg-400)
+![](http://muyy.withyoufriends.com/f27594afeda6b513ffec98c3e60ccbb0.jpg-400)
 
 在 Script 中，可以看到 `/usr/local/bin/node common_search.js` 相当于就是在调用该插件的时候起了一个 node 服务，后面的 `1` 是为了区分当前调用的是哪个搜索手动传入 `common_search.js` 的，`{query}` 则是用户查询的名称。
 
-![](http://oqhtscus0.bkt.clouddn.com/39ab06f7fbd80e5723e9abc4b595b930.jpg-400)
+![](http://muyy.withyoufriends.com/39ab06f7fbd80e5723e9abc4b595b930.jpg-400)
 
 ### 使用 Node.js 调用 JSON API
 
 最初开发参考了 [知乎搜索](https://github.com/RebeccaHanjw/zhihu_search_alfred_workflow) 这个项目，它是基于 [cheerio](https://github.com/cheeriojs/cheerio) 这个模块对请求到的网页数据进行分析爬取，但是引入了 cheerio 后，插件体积多了 2M 多，这对于一个插件来说太不友好了，所以这可能是 python 之类的语言更适合开发类似插件的原因吧(猜想:python 不需要引人第三方库就能进行爬虫)，于是我开始选择提供 JSON API 的接口，比如找寻掘金返回数据的接口。首先打开 chrome 控制台，这可能对前端工程师比较熟悉了。
 
-![](http://oqhtscus0.bkt.clouddn.com/6151c3ab055e196ac43e63377940bfdb.jpg-muyy)
+![](http://muyy.withyoufriends.com/6151c3ab055e196ac43e63377940bfdb.jpg-muyy)
 
 从而找到了掘金返回搜索数据的接口是  `https://search-merger-ms.juejin.im/v1/search?query={query}&page=0&raw_result=false&src=web`
 

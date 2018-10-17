@@ -6,7 +6,7 @@ date: 2017-06-06 22:15:01
 tags: ['读书笔记','JavaScript']
 categories: ['JavaScript']
 ---
-![](http://oqhtscus0.bkt.clouddn.com/a56029ee73c05e0f2897e6a1b574dc52.jpg-muyy)
+![](http://muyy.withyoufriends.com/a56029ee73c05e0f2897e6a1b574dc52.jpg-muyy)
 
 《你不知道的JavaScript》系列丛书给出了很多颠覆以往对JavaScript认知的点, 读完上卷，受益匪浅，于是对其精华的知识点进行了梳理。
 <!--more-->

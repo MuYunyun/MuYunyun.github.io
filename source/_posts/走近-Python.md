@@ -6,7 +6,7 @@ date: 2017-10-31 08:53:14
 tags: ['Python']
 categories: ['Python']
 ---
-![](http://oqhtscus0.bkt.clouddn.com/c5438d5b79ea49066234e0328fde04e1.jpg-muyy)
+![](http://muyy.withyoufriends.com/c5438d5b79ea49066234e0328fde04e1.jpg-muyy)
 
 > 本文首发在 [个人博客](http://muyunyun.cn/posts/a9d08041/)
 

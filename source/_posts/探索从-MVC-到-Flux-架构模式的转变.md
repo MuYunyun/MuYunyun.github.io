@@ -11,7 +11,7 @@ abbrlink: f0f11de9
 date: 2018-02-10 10:12:32
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/77fcc2250cfde1b47300673eb3006c8c.jpg-muyy)
+![](http://muyy.withyoufriends.com/77fcc2250cfde1b47300673eb3006c8c.jpg-muyy)
 
 在业务中一般 MVVM 框架一般都会配合上数据状态库(redux, mobx 等)一起使用，本文会通过一个小 demo 来讲述为什么会引人数据状态库。
 
@@ -23,7 +23,7 @@ date: 2018-02-10 10:12:32
 
 拿 backbone.js 说，它的 Model 对外暴露了 set 方法，也就是说可以在不止一个 View 里修改同个 Model 的数据，然后一个 Model 的数据同时对应多个 View 的呈现，如下图所示。当业务逻辑过多时，多个 Model 和多个 View 就会耦合到一块，可以想到排查 bug 的时候会比较痛苦。
 
-![](http://oqhtscus0.bkt.clouddn.com/779649b773473d622881577730d81be7.jpg-200)
+![](http://muyy.withyoufriends.com/779649b773473d622881577730d81be7.jpg-200)
 
 针对传统 MVC 架构性能低(多次全局渲染)以及前端 MVC 框架耦合度高(Model 和 View) 的痛处，MVVM 框架完美地解决了以上两点。可以参阅之前写的 [MVVM 框架解析之双向绑定](https://github.com/MuYunyun/blog/issues/11)
 
@@ -31,7 +31,7 @@ date: 2018-02-10 10:12:32
 
 假设有这么一个场景，在输入框中查询条件，点击查询，然后在列表中返回相应内容。如下图所示：
 
-![](http://oqhtscus0.bkt.clouddn.com/ecb63d73e997ebf901552c2a89a991c8.jpg-200)
+![](http://muyy.withyoufriends.com/ecb63d73e997ebf901552c2a89a991c8.jpg-200)
 
 假设用 react 实现，思路大体是先调用查询接口，调用成功后将获取到的数据通过 `setState` 存进 list 中，列表显示部分代码如下：
 
@@ -74,7 +74,7 @@ function List(props) {
 
 ### 引人 Flux 架构模式
 
-![](http://oqhtscus0.bkt.clouddn.com/77fcc2250cfde1b47300673eb3006c8c.jpg-200)
+![](http://muyy.withyoufriends.com/77fcc2250cfde1b47300673eb3006c8c.jpg-200)
 
 Flux 架构模式的 4 个重要组成部分以及它们的关系如上图所示，下文会根据 dispatch，store, action, view 的顺序逐步揭开 Flux 架构模式的面纱。
 

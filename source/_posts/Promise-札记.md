@@ -9,7 +9,7 @@ abbrlink: 690a449f
 date: 2018-07-02 12:09:57
 ---
 
-![](http://oqhtscus0.bkt.clouddn.com/60f4b6024c6dd00425a7fdc9f8067254.jpg-muyy)
+![](http://muyy.withyoufriends.com/60f4b6024c6dd00425a7fdc9f8067254.jpg-muyy)
 
 实践了一个符合 Promise/A+ 规范的 [repromise](https://github.com/MuYunyun/repromise)
 
@@ -35,7 +35,7 @@ date: 2018-07-02 12:09:57
 
 ### Promise/A+ 核心
 
-![](http://oqhtscus0.bkt.clouddn.com/e1a0c15c44f9b014aa78d7b7620db474.jpg-200)
+![](http://muyy.withyoufriends.com/e1a0c15c44f9b014aa78d7b7620db474.jpg-200)
 
 在实现一个符合 Promise/A+ 规范的 promise 之前，先了解下 Promise/A+ 核心，想更全面地了解可以阅读 [Promise/A+规范](https://segmentfault.com/a/1190000002452115)
 
