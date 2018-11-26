@@ -9,7 +9,7 @@ abbrlink: 384a97b3
 date: 2018-01-16 17:33:17
 ---
 
-![](http://muyy.withyoufriends.com/203d14fb02edc5f37ae3841a2372434b.jpg-muyy)
+![](http://with.muyunyun.cn/203d14fb02edc5f37ae3841a2372434b.jpg-muyy)
 
 ### MVVM 框架
 
@@ -19,7 +19,7 @@ date: 2018-01-16 17:33:17
 
 #### MVVM 框架基本概念
 
-![](http://muyy.withyoufriends.com/203d14fb02edc5f37ae3841a2372434b.jpg-400)
+![](http://with.muyunyun.cn/203d14fb02edc5f37ae3841a2372434b.jpg-400)
 
 在 MVVM 框架中，View(视图) 和 Model(数据) 是不可以直接通讯的，在它们之间存在着 ViewModel 这个中间介充当着观察者的角色。当用户操作 View(视图)，ViewModel 感知到变化，然后通知 Model 发生相应改变；反之当 Model(数据) 发生改变，ViewModel 也能感知到变化，使 View 作出相应更新。这个一来一回的过程就是我们所熟知的双向绑定。
 
@@ -31,11 +31,11 @@ MVVM 框架的好处显而易见：当前端对数据进行操作的时候，可
 
 > 贴士：这篇文章主要是针对 vue 的双向绑定实现，React 中其实并没有双向绑定这一说。
 
-![](http://muyy.withyoufriends.com/ecac404dd0a757b06ae1bd1b5c8212ef.jpg-600)
+![](http://with.muyunyun.cn/ecac404dd0a757b06ae1bd1b5c8212ef.jpg-600)
 
 模拟 Vue 的双向绑定流，实现了一个简单的 [MVVM 框架](https://github.com/MuYunyun/mvvm)，从上图中可以看出虚线方形中就是之前提到的 ViewModel 中间介层，它充当着观察者的角色。另外可以发现双向绑定流中的 View 到 Model 其实是通过 input 的事件监听函数实现的，如果换成 React(单向绑定流) 的话，它在这一步交给状态管理工具(比如 Redux)来实现。另外双向绑定流中的 Model 到 View 其实各个 MVVM 框架实现的都是大同小异的，都用到的核心方法是 `Object.defineProperty()`，通过这个方法可以进行数据劫持，当数据发生变化时可以捕捉到相应变化，从而进行后续的处理。
 
-![](http://muyy.withyoufriends.com/4b8db3d45cd6f37935e9bec42f0095c7.jpg-300)
+![](http://with.muyunyun.cn/4b8db3d45cd6f37935e9bec42f0095c7.jpg-300)
 
 #### Mvvm(入口文件) 的实现
 
@@ -133,7 +133,7 @@ function defineReactive(data, key, value) {
 
 观测到变化后，我们总要通知给特定的人群，让他们做出相应的处理吧。为了更方便地理解，我们可以把订阅当成是订阅了一个微信公众号，当微信公众号的内容有更新时，那么它会把内容推送(update) 到订阅了它的人。
 
-![](http://muyy.withyoufriends.com/42bd217acd8b2ef5c76de1ca65ba7581.jpg-200)
+![](http://with.muyunyun.cn/42bd217acd8b2ef5c76de1ca65ba7581.jpg-200)
 
 那么订阅了同个微信公众号的人有成千上万个，那么首先想到的就是要 new Array() 去存放这些人(html 节点)吧。于是就有了如下代码：
 

@@ -6,7 +6,7 @@ date: 2017-07-02 13:40:33
 tags: ['JavaScript', 'TypeScript']
 categories: ['TypeScript']
 ---
-![](http://muyy.withyoufriends.com/5e7b640325806920160f538d7c50f5d7.jpg-muyy)
+![](http://with.muyunyun.cn/5e7b640325806920160f538d7c50f5d7.jpg-muyy)
 > 文中的案例代码已经上传到 [TypeScript](https://github.com/MuYunyun/TypeScript)
 
 TypeScript 并不是一个完全新的语言, 它是 JavaScript 的超集，为 JavaScript 的生态增加了类型机制，并最终将代码编译为纯粹的 JavaScript 代码。
@@ -15,7 +15,7 @@ TypeScript 并不是一个完全新的语言, 它是 JavaScript 的超集，为 
 
 TypeScript 由 Microsoft(算上 Angular 2 的话加上 Google)开发和维护的一种开源编程语言。 它支持 JavaScript 的所有语法和语义，同时通过作为 ECMAScript 的超集来提供一些额外的功能，如类型检测和更丰富的语法。下图显示了 TypeScript 与 ES5，ES2015，ES2016 之间的关系。
 
-![](http://muyy.withyoufriends.com/da62039bf146c2ebd615ef1d11a1a808.jpg)
+![](http://with.muyunyun.cn/da62039bf146c2ebd615ef1d11a1a808.jpg)
 
 ## 使用 TypeScript 的原因
 JavaScript 是一门弱类型语言，变量的数据类型具有动态性，只有执行时才能确定变量的类型，这种后知后觉的认错方法会让开发者成为调试大师，但无益于编程能力的提升，还会降低开发效率。TypeScript 的类型机制可以有效杜绝由变量类型引起的误用问题，而且开发者可以控制对类型的监控程度，是严格限制变量类型还是宽松限制变量类型，都取决于开发者的开发需求。添加类型机制之后，副作用主要有两个：增大了开发人员的学习曲线，增加了设定类型的开发时间。总体而言，这些付出相对于代码的健壮性和可维护性，都是值得的。

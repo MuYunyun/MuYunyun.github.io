@@ -9,7 +9,7 @@ abbrlink: 55ccbd9e
 date: 2018-08-05 22:22:32
 ---
 
-![](http://muyy.withyoufriends.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
+![](http://with.muyunyun.cn/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
 本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
@@ -177,7 +177,7 @@ function renderComponent(component) {
 
 刷新页面，可以发现 input 框已为选中状态。
 
-![](http://muyy.withyoufriends.com/d35589fbbff45a2437c6c13e24ba8058.jpg-200)
+![](http://with.muyunyun.cn/d35589fbbff45a2437c6c13e24ba8058.jpg-200)
 
 处理完普通元素的 ref 后，再来处理下自定义组件的 ref 的情况。之前默认自定义组件上是没属性的，现在只要针对自定义组件的 ref 属性做相应处理即可。稍微修改 vdomToDom 函数如下：
 
@@ -242,7 +242,7 @@ class B extends Component {
 
 效果如下：
 
-![](http://muyy.withyoufriends.com/reactref%E6%B5%8B%E8%AF%951)
+![](http://with.muyunyun.cn/reactref%E6%B5%8B%E8%AF%951)
 
 ### 鸣谢
 Especially thank [simple-react](https://github.com/hujiulong/simple-react) for the guidance function of this library. At the meantime，respect for [preact](https://github.com/developit/preact) and [react](https://github.com/facebook/react)

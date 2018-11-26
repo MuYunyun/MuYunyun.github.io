@@ -6,7 +6,7 @@ categories: ['React']
 abbrlink: 2d678a6
 date: 2017-07-01 15:41:05
 ---
-![](http://muyy.withyoufriends.com/f82f7765b1171459d9fa593df836c658.jpg-muyy)
+![](http://with.muyunyun.cn/f82f7765b1171459d9fa593df836c658.jpg-muyy)
 
 > * 原文地址：[Server-Side React Rendering](https://css-tricks.com/server-side-react-rendering/)
 

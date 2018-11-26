@@ -9,7 +9,7 @@ abbrlink: dc5976f1
 date: 2018-07-27 08:13:02
 ---
 
-![](http://muyy.withyoufriends.com/9c461a61924ed0fecb6024a256671251.jpg-muyy)
+![](http://with.muyunyun.cn/9c461a61924ed0fecb6024a256671251.jpg-muyy)
 
 本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/...) [项目地址](https://github.com/MuYunyun/cpreact)
 
@@ -25,7 +25,7 @@ date: 2018-07-27 08:13:02
 
 先来回顾 React 的生命周期，用流程图表示如下：
 
-![](http://muyy.withyoufriends.com/77e8b5ceaa1d697f280053be91a87bb3.jpg)
+![](http://with.muyunyun.cn/77e8b5ceaa1d697f280053be91a87bb3.jpg)
 
 该流程图比较清晰地呈现了 react 的生命周期。其分为 3 个阶段 —— 生成期，存在期，销毁期。
 
@@ -327,11 +327,11 @@ function setProps(component, attributes) {
 
 * 生命周期测试
 
-![](http://muyy.withyoufriends.com/react%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B5%8B%E8%AF%951.gif)
+![](http://with.muyunyun.cn/react%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B5%8B%E8%AF%951.gif)
 
 * diff 测试
 
-![](http://muyy.withyoufriends.com/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9Fdiff%E6%B5%8B%E8%AF%951.gif)
+![](http://with.muyunyun.cn/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9Fdiff%E6%B5%8B%E8%AF%951.gif)
 
 ### 鸣谢
 Especially thank [simple-react](https://github.com/hujiulong/simple-react) for the guidance function of this library. At the meantime，respect for [preact](https://github.com/developit/preact) and [react](https://github.com/facebook/react)

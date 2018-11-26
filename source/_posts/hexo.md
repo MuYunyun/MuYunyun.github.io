@@ -6,7 +6,7 @@ date: 2017-05-29 22:01:26
 tags: ['hexo','blog']
 categories: ['git']
 ---
-![](http://muyy.withyoufriends.com/d6b051baa29bb75e6b5f691313a82c33.jpg-muyy)
+![](http://with.muyunyun.cn/d6b051baa29bb75e6b5f691313a82c33.jpg-muyy)
 
 写博客有三个层次，第一层次是借鉴居多的博文，第二层次是借鉴后经过消化后有一定量产出的博文，第三层次是原创好文居多的博文。在参考了大量前辈搭建hexo的心得后，此文尽量把一些别人未提到的点以及比较好用的点给提出来。所以你在参考本文的时候，应该已经过完了[hexo](https://hexo.io/)。本文有以下内容:
 * 快速实现博客压缩
@@ -88,7 +88,7 @@ abbrlink:
 
 ## 添加酷炫的打赏二维码
 看了好些博客，支付宝的收款码和微信的收款码都是分开的，且是没有美化过的二维码，让人打赏的欲望自然就下降了。来看一下我的赞赏二维码(支持微信和支付宝支付哟)
-![](http://muyy.withyoufriends.com/134f61fc3181e90acfa945aad72a04a6.png-400)
+![](http://with.muyunyun.cn/134f61fc3181e90acfa945aad72a04a6.png-400)
 
 实现这个酷炫二维码的流程如下：
 * 首先，分别获得支付宝和微信的收款码
@@ -133,12 +133,12 @@ alipay: /pay.png
 
 ## 添加酷炫的歌单模块以及播放器
 这个模块借鉴了@[小胡子哥](http://www.barretlee.com/entry/)。根据上面的自定义JS和CSS的知识点不难实现歌单模块以及播放器。效果如下图：
-![](http://muyy.withyoufriends.com/502d78856e46095253e59fd11396b2a4.jpg)
+![](http://with.muyunyun.cn/502d78856e46095253e59fd11396b2a4.jpg)
 核心代码在`\themes\next\source\js\src\music\nmlist`中，[点击看源码](https://github.com/MuYunyun/MuYunyun.githubio/blob/muyy/themes/next/source/js/src/music/nmlist.js)，其核心思路就是通过jsonp的方式对定义好的歌单进行调用。
 
 在调试的过程中，发现了小胡子哥代码的一个bug：当点击一个专辑暂停后，再点击其他的专辑，这时候点击暂停、播放的控制逻辑有错误。经过排查在nmlist.js文件中的bind方法中加上了`$("#nmPlayer").removeAttr("data-paused")`解决了这个bug。
 
-![](http://muyy.withyoufriends.com/73d9f4070b81bbdab8f80db388af4a40.jpg)
+![](http://with.muyunyun.cn/73d9f4070b81bbdab8f80db388af4a40.jpg)
 
 再接着玩的话，可以给播放器加上歌词的功能。这里有一篇[相关文章](http://frankorz.com/2016/09/30/Hexo-patch/#歌词), 有机会可以去把玩一番。
 
@@ -185,7 +185,7 @@ git push origin muyy
 
 ### coding 上创建一个新项目
 这里只介绍 coding 上面如何创建项目，以及把本地 hexo 部署到 coding 上面
-![](http://muyy.withyoufriends.com/41b27d98189a9164d2b2a47ccbafdbfa.jpg)
+![](http://with.muyunyun.cn/41b27d98189a9164d2b2a47ccbafdbfa.jpg)
 
 ### 同步本地 hexo 到 coding 上
 把获取到了ssh配置_config.yml文件中的deploy下，如果是第一次使用 coding 的话，需要设置SSH公钥，生成的方法可以参考[coding帮助中心](https://coding.net/help/doc/git/ssh-key.html), 其实和 github 配置一模一样的。
@@ -229,7 +229,7 @@ hexo deploy -g
 
 ### 设置域名解析
 现在要实现国内的走coding，海外的走github，只要配置2个CNAME就行。域名解析如下：
-![](http://muyy.withyoufriends.com/c2337ab8ed97d0f825703e8ea80a4123.jpg)
+![](http://with.muyunyun.cn/c2337ab8ed97d0f825703e8ea80a4123.jpg)
 
 ## 参考资料
 * [小胡子哥](http://www.barretlee.com/entry/)
