@@ -2,10 +2,10 @@
   {% set current = date(Date.now(), "YYYY") %}
   &copy; {% if theme.since and theme.since != current %} {{ theme.since }} - {% endif %}
   <span itemprop="copyrightYear">{{ current }}</span>
-  <span class="with-love">
-    <i class="fa fa-{{ theme.authoricon }}"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">{{ config.author }}</span>
+  <span class="with-love"><i class="fa fa-{{ theme.authoricon }}"></i></span>
+  <span class="author" itemprop="copyrightHolder"><a href="https://github.com/MuYunyun">{{ config.author }}</a></span>
+  <span class="with-love"><i class="fa fa-globe"></i></span>
+  <span class="author" itemprop="copyrightHolder"><a href="http://www.miitbeian.gov.cn/">浙ICP备18050494号</a></span>
 </div>
 
 {% if theme.copyright %}
