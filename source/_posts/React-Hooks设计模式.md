@@ -1,12 +1,13 @@
 ---
 title: React Hooks 深入系列 —— 设计模式
 copyright: true
-date: 2019-08-01 04:46:20
 tags:
   - React
+  - Hooks
 categories:
   - React
-  - Hooks
+abbrlink: 32fb0f08
+date: 2019-08-01 04:46:20
 ---
 
 ![](http://with.muyunyun.cn/34a60f7edb08afaf6d721708ab21b4d7.jpg-muyy)
