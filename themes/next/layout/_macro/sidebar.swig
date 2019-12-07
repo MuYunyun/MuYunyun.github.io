@@ -80,8 +80,22 @@
         {% endif %}
 
         <div class="links-of-author motion-element">
-          {% if theme.social %}
-            {% for name, link in theme.social %}
+          {% if theme.socialFirstLine %}
+            {% for name, link in theme.socialFirstLine %}
+              <span class="links-of-author-item">
+                <a href="{{ link }}" target="_blank" title="{{ name }}">
+                  {% if theme.social_icons.enable %}
+                    <i class="fa fa-fw fa-{{ theme.social_icons[name] | default('globe') | lower }}"></i>
+                  {% endif %}
+                  {{ name }}
+                </a>
+              </span>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <div class="links-of-author motion-element">
+          {% if theme.socialSecondLine %}
+            {% for name, link in theme.socialSecondLine %}
               <span class="links-of-author-item">
                 <a href="{{ link }}" target="_blank" title="{{ name }}">
                   {% if theme.social_icons.enable %}

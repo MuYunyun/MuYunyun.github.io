@@ -22,6 +22,5 @@ I like programming, music, surfing internet, playing games, and I love making fr
 
 ### Social Links
 
-* Github: [MuYunyun](https://github.com/MuYunyun)
+* Social: [github](https://github.com/MuYunyun)、[twitter](https://twitter.com/YunyunMu)、[掘金](https://juejin.im/user/582becad2f301e0059426df2)、[知乎](https://www.zhihu.com/people/YunyunMu/activities)
 * E-mail: [muyy95@gmail.com](mailto:muyy95@gmail.com)
-* Social: [掘金](https://juejin.im/user/582becad2f301e0059426df2)
