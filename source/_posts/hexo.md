@@ -87,6 +87,7 @@ abbrlink:
 * crc32 & dec
 
 ## 添加酷炫的打赏二维码
+
 看了好些博客，支付宝的收款码和微信的收款码都是分开的，且是没有美化过的二维码，让人打赏的欲望自然就下降了。来看一下我的赞赏二维码(支持微信和支付宝支付哟)
 ![](http://with.muyunyun.cn/134f61fc3181e90acfa945aad72a04a6.png-400)
 
@@ -101,6 +102,7 @@ alipay: /pay.png
 ```
 
 ### 打赏字体不闪动
+
 修改文件`next/source/css/_common/components/post/post-reward.styl`，然后注释其中的函数`wechat:hover`和`alipay:hover`，如下：
 ``` js
 /* 注释文字闪动函数
@@ -122,6 +124,7 @@ alipay: /pay.png
 博主用的是next主题，别的主题目录结构可能不太一样，但是整个框架是一样的，生成方式是一样的，所以引用方式也是相同的
 
 ### 添加自定义js样式
+
 * 首先把js文件放在`\themes\next\source\js\src`文件目录下
 * 然后找到`\themes\next\layout`目录下的布局文件`_layout.swig`
 * 把script引用代码加入到该文件中即可
@@ -129,9 +132,11 @@ alipay: /pay.png
 `<script type="text/javascript" src="/js/src/js文件名.js"></script>`
 
 ### 添加自定义css样式
+
 添加外部css样式和引用自定义js代码是一样的，在对应css文件夹内添加自定义外部css样式文件，然后在layout文件中添加引用即可。也可以在`\themes\next\source\css\_custom\custom.styl`文件中进行样式的添加。
 
 ## 添加酷炫的歌单模块以及播放器
+
 这个模块借鉴了@[小胡子哥](http://www.barretlee.com/entry/)。根据上面的自定义JS和CSS的知识点不难实现歌单模块以及播放器。效果如下图：
 ![](http://with.muyunyun.cn/502d78856e46095253e59fd11396b2a4.jpg)
 核心代码在`\themes\next\source\js\src\music\nmlist`中，[点击看源码](https://github.com/MuYunyun/MuYunyun.githubio/blob/muyy/themes/next/source/js/src/music/nmlist.js)，其核心思路就是通过jsonp的方式对定义好的歌单进行调用。
@@ -143,12 +148,15 @@ alipay: /pay.png
 再接着玩的话，可以给播放器加上歌词的功能。这里有一篇[相关文章](http://frankorz.com/2016/09/30/Hexo-patch/#歌词), 有机会可以去把玩一番。
 
 ## github分支管理博客思路
+
 有一个问题，如果我电脑坏了怎么办，因为在github中的我们github.io项目是只有编译后的文件的，没有源文件的，也就是说，如果我们的电脑坏了，打不开了，我们的博客就不能进行更新了，所以我们要把我们的源文件也上传到github上。这个时候我可以选择新建一个仓库来存放源文件，也可以把源文件 push 到 user.github.io 的其他分支。我选择了后者。
 
 ### 创建muyy(任意)分支
+
 创建两个分支：master 与 muyy,（这个muyy分支就是存放我们源文件的分支，我们只需要更新muyy分支上的内容据就好，master上的分支hexo编译的时候会更新的）
 
 ### 初始化仓库
+
 然后我们再初始化仓库，重新对我们的代码进行版本控制
 ``` js
 git init
@@ -157,6 +165,7 @@ git remote add origin <server>
 `<server>`是指在线仓库的地址。origin是本地分支,remote add操作会将本地仓库映射到云端
 
 ### 将博客源文件上传至muyy分支
+
 .gitignore文件作用是声明不被git记录的文件，blog根目录下的.gitignore是hexo初始化带来的，可以先删除或者直接编辑，对hexo不会有影响。建议.gitignore内添加以下内容：
 ``` js
 /.deploy_git
@@ -175,19 +184,23 @@ git push origin muyy
 ```
 
 ## 秒传图片到七牛云并展现在博客中
+
 在markdown中写blog的朋友，想必这点是最烦恼的吧，一般来说都要手动上传图片到七牛云，再把链接写到markdown中。逛了逛社区，有人用phthon实现一个自动上传的脚本，但是我觉得还不是特别方便，这时在github上找到一个一键贴图工具[qiniu-image-tool](https://github.com/jiwenxing/qiniu-image-tool)，它支持本地文件、截图、网络图片一键上传七牛云并返回图片引用。Mac 是基于 Alfred 的，其 windows 也有相应版本[windows版本](http://jverson.com/2017/05/28/qiniu-image-v2/)。
 
 按照其要求配置好以后，用截图软件截图后，或者本地图片后 copy，然后直接按设置好的 command+option+v，然后在图片成功上传到七牛云图床上，剪贴板上也有相应的连接。
 ![](https://raw.githubusercontent.com/jiwenxing/qiniu-image-tool/master/res/local.gif)
 
 ## 将博客同时部署到 github 和 coding
+
 通常我们把hexo托管在github，但是毕竟github是国外的，访问速度上还是有点慢，所以想也部署一套在国内的托管平台，目前gitcafe已经被coding收购了，所以就决定部署到coding。但是coding有个不好的地方就是访问自定义域名的站点时，不充值的话会有广告跳转页，所以我现在也是处于观望的态度，先把coding的环境代码也先布置好，等它哪一天广告跳转页没了，就把域名指过去。
 
 ### coding 上创建一个新项目
+
 这里只介绍 coding 上面如何创建项目，以及把本地 hexo 部署到 coding 上面
 ![](http://with.muyunyun.cn/41b27d98189a9164d2b2a47ccbafdbfa.jpg)
 
 ### 同步本地 hexo 到 coding 上
+
 把获取到了ssh配置_config.yml文件中的deploy下，如果是第一次使用 coding 的话，需要设置SSH公钥，生成的方法可以参考[coding帮助中心](https://coding.net/help/doc/git/ssh-key.html), 其实和 github 配置一模一样的。
 
 本地打开 `id_rsa.pub` 文件，复制其中全部内容，填写到`SSH_RSA公钥`key下的一栏，公钥名称可以随意起名字。完成后点击“添加”，然后输入密码或动态码即可添加完成。
@@ -225,11 +238,19 @@ hexo deploy -g
 ```
 
 ### pages服务方式部署
+
 将代码上传至coding之后我们就要开启pages服务了，在pages页面我们只需要将部署来源选择为master分支，然后将自定义域名填写我们自己购买的域名就可以了
 
 ### 设置域名解析
+
 现在要实现国内的走coding，海外的走github，只要配置2个CNAME就行。域名解析如下：
 ![](http://with.muyunyun.cn/c2337ab8ed97d0f825703e8ea80a4123.jpg)
+
+### 添加评论
+
+目前使用的评论系统是 [gitment](https://github.com/imsun/gitment), 其存储评论的数据在 github 相应的仓库中。
+
+> [解决证书过期的问题](https://github.com/imsun/gitment/issues/175#issuecomment-570030753), 初步分析是项目的证书过期了, 导致存储在项目的 cdn 引用失败。后续如果还有问题的话, 考虑自行维护。
 
 ## 参考资料
 * [小胡子哥](http://www.barretlee.com/entry/)
