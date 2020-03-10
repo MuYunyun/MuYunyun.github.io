@@ -15,7 +15,7 @@ Time is flying, it arrives at the end of year again. This is my first year worki
 
 ### Learn from work
 
-The first course I learn from my team is about `starting with the end`. It means everything we do today is prepared for the tomorrow. In the other word, we should realize witch period the thing we're doing is in, and our team write summary every week to make sure the established goals become closer and closer.
+The first course I learn from my team is about `starting with the end`. It means everything we do today is prepared for the tomorrow. In the other word, we should realize which period the thing we're doing is in, and our team write summary every week to make sure the established goals become closer and closer.
 
 The second course I learn from the work is to try to `use English more`. There are so much rich resource in Medium, MDN, Frontend Masters and even in twitter. It's the first time I met with so many foreigners engineer in the JSConf but I can't talk with them fluently. It's obviously using English skillfully will open your eyes and improve efficiency looking for some information.
 
