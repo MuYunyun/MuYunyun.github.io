@@ -20,18 +20,18 @@ var isMobile = {
   }
 };
 
-$(window).on("load", function() {
+// $(window).on("load", function() {
 
-  if (!$('#nmlist').size()) {
-    // run music app
-    !isMobile.any() && $.getScript('/js/src/music/nmlist.js');
+//   if (!$('#nmlist').size()) {
+//     // run music app
+//     !isMobile.any() && $.getScript('/js/src/music/nmlist.js');
 
-    if (window.location.search.indexOf('music') > -1 && isMobile.any()) {
-      $(document).on('touchstart', '.aplayer .aplayer-pic', function(e) {
-        evt.preventDefault();
-        NM.togglePlay();
-      });
-      $.getScript('/js/src/music/nmlist.js');
-    }
-  }
-})
+//     if (window.location.search.indexOf('music') > -1 && isMobile.any()) {
+//       $(document).on('touchstart', '.aplayer .aplayer-pic', function(e) {
+//         evt.preventDefault();
+//         NM.togglePlay();
+//       });
+//       $.getScript('/js/src/music/nmlist.js');
+//     }
+//   }
+// })
