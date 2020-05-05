@@ -8,12 +8,12 @@
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
   <p><span>Title:</span><a href="{{ url_for(page.path) }}">{{ page.title }}</a></p>
   <p><span>Author:</span><a href="/" title="访问 {{ theme.author }} 的个人博客">{{ theme.author }}</a></p>
-  <p><span>Posted On:</span>{{ page.date.format("YYYY年MM月DD日 - HH:MM") }}</p>
-  <p><span>Update Time:</span>{{ page.updated.format("YYYY年MM月DD日 - HH:MM") }}</p>
+  <p><span class="type">Posted On:</span>{{ page.date.format("YYYY/MM/DD HH:MM") }}</p>
+  <p><span class="type">Edited On:</span>{{ page.updated.format("YYYY/MM/DD/ HH:MM") }}</p>
   <p><span>Origin Link:</span><a href="{{ url_for(page.path) }}" title="{{ page.title }}">{{ page.permalink }}</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="{{ page.permalink }}"  aria-label="复制成功！"></i></span>
   </p>
-  <p><span>EULA:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
+  <p><span>EULA:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a>转载请保留原文链接及作者。</p>
 </div>
 <script>
   var clipboard = new Clipboard('.fa-clipboard');
