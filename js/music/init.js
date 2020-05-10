@@ -1,3 +1,3 @@
-// build time:Sun May 10 2020 18:32:45 GMT+0800 (China Standard Time)
+// build time:Sun May 10 2020 18:57:30 GMT+0800 (China Standard Time)
 var isMobile={Android:function(){return navigator.userAgent.match(/Android/i)},BlackBerry:function(){return navigator.userAgent.match(/BlackBerry/i)},iOS:function(){return navigator.userAgent.match(/iPhone|iPad|iPod/i)},Opera:function(){return navigator.userAgent.match(/Opera Mini/i)},Windows:function(){return navigator.userAgent.match(/IEMobile/i)},any:function(){return isMobile.Android()||isMobile.BlackBerry()||isMobile.iOS()||isMobile.Opera()||isMobile.Windows()}};$(window).on("load",function(){if(!$("#nmlist").size()){!isMobile.any()&&$.getScript("/js/src/music/nmlist.js");if(window.location.search.indexOf("music")>-1&&isMobile.any()){$(document).on("touchstart",".aplayer .aplayer-pic",function(i){evt.preventDefault();NM.togglePlay()});$.getScript("/js/src/music/nmlist.js")}}});
 //rebuild by neat 
