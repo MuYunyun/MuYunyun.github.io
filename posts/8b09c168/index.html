@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"muyunyun.cn","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="该系列会有 3 篇文章，分别介绍什么是函数式编程、剖析函数式编程库、以及函数式编程在 React 中的应用，欢迎关注我的 blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数式编程入门">
+<meta property="og:url" content="http://muyunyun.cn/posts/8b09c168/index.html">
+<meta property="og:site_name" content="Time Flying">
+<meta property="og:description" content="该系列会有 3 篇文章，分别介绍什么是函数式编程、剖析函数式编程库、以及函数式编程在 React 中的应用，欢迎关注我的 blog">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://with.muyunyun.cn/aca1db3dd5aaabfbc4351181d1a39df6.jpg-muyy">
+<meta property="og:image" content="http://with.muyunyun.cn/c65fa1b63dbe9fa0a0771e7e561dc85b.jpg-200">
+<meta property="article:published_time" content="2019-02-05T05:23:23.000Z">
+<meta property="article:modified_time" content="2019-02-06T14:48:36.870Z">
+<meta property="article:author" content="牧云云">
+<meta property="article:tag" content="fp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://with.muyunyun.cn/aca1db3dd5aaabfbc4351181d1a39df6.jpg-muyy">
+
+<link rel="canonical" href="http://muyunyun.cn/posts/8b09c168/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>函数式编程入门 | Time Flying</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Time Flying" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Time Flying</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/MuYunyun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://muyunyun.cn/posts/8b09c168/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="牧云云">
+      <meta itemprop="description" content="是云随风，倚码为诗">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Time Flying">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          函数式编程入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-02-05 13:23:23" itemprop="dateCreated datePublished" datetime="2019-02-05T13:23:23+08:00">2019-02-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/fp/" itemprop="url" rel="index"><span itemprop="name">fp</span></a>
+                </span>
+            </span>
+
+          
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.wordcount</span>
+                
+                <span title="post.wordcount">
+                  2,083 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.min2read</span>
+                
+                <span title="post.min2read">
+                  10 分钟
+                </span>
+              
+            </div>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="http://with.muyunyun.cn/aca1db3dd5aaabfbc4351181d1a39df6.jpg-muyy" alt=""></p>
+<p>该系列会有 3 篇文章，分别介绍什么是函数式编程、剖析函数式编程库、以及函数式编程在 React 中的应用，欢迎关注我的 <a href="https://github.com/MuYunyun/blog" target="_blank" rel="noopener">blog</a></p>
+<a id="more"></a>
+
+<h3 id="命令式编程和声明式编程"><a href="#命令式编程和声明式编程" class="headerlink" title="命令式编程和声明式编程"></a>命令式编程和声明式编程</h3><p>拿泡茶这个事例进行区分命令式编程和声明式编程</p>
+<ul>
+<li>命令式编程</li>
+</ul>
+<p>1.烧开水(为第一人称)<br>2.拿个茶杯<br>3.放茶叶<br>4.冲水</p>
+<ul>
+<li>声明式编程</li>
+</ul>
+<p>1.给我泡杯茶(为第二人称)</p>
+<p>举个 demo</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 命令式编程</span></span><br><span class="line"><span class="keyword">const</span> convert = <span class="function"><span class="keyword">function</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> result = []</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    result[i] = arr[i].toLowerCase()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明式编程</span></span><br><span class="line"><span class="keyword">const</span> convert = <span class="function"><span class="keyword">function</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arr.map(<span class="function"><span class="params">r</span> =&gt;</span> r.toLowerCase())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="什么是函数式编程"><a href="#什么是函数式编程" class="headerlink" title="什么是函数式编程"></a>什么是函数式编程</h3><p>函数式编程是声明式编程的范式。在函数式编程中数据在由纯函数组成的管道中传递。</p>
+<blockquote>
+<p>函数式编程可以用简单如<code>交换律、结合律、分配律</code>的数学之法来帮我们简化代码的实现。</p>
+</blockquote>
+<p>它具有如下一些特性:</p>
+<ul>
+<li>纯粹性: 纯函数不改变除当前作用域以外的值;</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反面示例</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="number">0</span></span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">b</span>) =&gt;</span> a = a + b <span class="comment">// 两次 add(1) 结果不一致</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确示例</span></span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>数据不可变性: Immutable</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反面示例</span></span><br><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line"><span class="keyword">const</span> arrAdd = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  arr.push(value)</span><br><span class="line">  <span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arrAdd(<span class="number">3</span>) <span class="comment">// [1, 2, 3]</span></span><br><span class="line">arrAdd(<span class="number">3</span>) <span class="comment">// [1, 2, 3, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 正面示例</span></span><br><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line"><span class="keyword">const</span> arrAdd = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> arr.concat(value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arrAdd(<span class="number">3</span>) <span class="comment">// [1, 2, 3]</span></span><br><span class="line">arrAdd(<span class="number">3</span>) <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在后记 1 中对数组字符串方法是否对原值有影响作了整理</p>
+</blockquote>
+<ul>
+<li>函数柯里化: 将多个入参的函数转化为一个入参的函数;</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = <span class="function"><span class="params">a</span> =&gt;</span> <span class="function"><span class="params">b</span> =&gt;</span> <span class="function"><span class="params">c</span> =&gt;</span> a + b + c</span><br><span class="line">add(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>偏函数: 将多个入参的函数转化成两部分;</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = <span class="function"><span class="params">a</span> =&gt;</span> <span class="function">(<span class="params">b, c</span>) =&gt;</span> a + b + c</span><br><span class="line">add(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可组合: 函数之间能组合使用</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">x</span>) =&gt;</span> x + x</span><br><span class="line"><span class="keyword">const</span> mult = <span class="function">(<span class="params">x</span>) =&gt;</span> x * x</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> addAndMult = <span class="function">(<span class="params">x</span>) =&gt;</span> add(mult(x))</span><br></pre></td></tr></table></figure>
+
+<h3 id="柯里化-curry"><a href="#柯里化-curry" class="headerlink" title="柯里化(curry)"></a>柯里化(curry)</h3><p>如下是一个加法函数:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function">(<span class="params">a, b, c</span>) =&gt;</span> a + b + c</span><br><span class="line"></span><br><span class="line">add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<p>假如有这样一个 <code>curry</code> 函数, 用其包装 <code>add</code> 函数后返回一个新的函数 <code>curryAdd</code>, 我们可以将参数 <code>a、b</code> 进行分开传递进行调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> curryAdd = curry(add)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以下输出结果都相同</span></span><br><span class="line">curryAdd(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// 6</span></span><br><span class="line">curryAdd(<span class="number">1</span>, <span class="number">2</span>)(<span class="number">3</span>) <span class="comment">// 6</span></span><br><span class="line">curryAdd(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>) <span class="comment">// 6</span></span><br><span class="line">curryAdd(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>) <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="动手实现一个-curry-函数"><a href="#动手实现一个-curry-函数" class="headerlink" title="动手实现一个 curry 函数"></a>动手实现一个 curry 函数</h4><p>核心思路: 若传进去的参数个数未达到 <code>curryAdd</code> 的个数，则将参数缓存在闭包变量 lists 中:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curry</span>(<span class="params">fn, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> length = fn.length</span><br><span class="line">  <span class="keyword">let</span> lists = args || []</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> listLen</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">..._args</span>) </span>&#123;</span><br><span class="line">    lists = [...lists, ..._args]</span><br><span class="line">    listLen = lists.length</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (listLen &lt; length) &#123;</span><br><span class="line">      <span class="keyword">const</span> that = lists</span><br><span class="line">      lists = []</span><br><span class="line">      <span class="keyword">return</span> curry(fn, ...that)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (listLen === length) &#123;</span><br><span class="line">      <span class="keyword">const</span> that = lists</span><br><span class="line">      lists = []</span><br><span class="line">      <span class="keyword">return</span> fn.apply(<span class="keyword">this</span>, that)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码组合-compose"><a href="#代码组合-compose" class="headerlink" title="代码组合(compose)"></a>代码组合(compose)</h3><p>现在有 <code>toUpperCase</code>、<code>reverse</code>、<code>head</code> 三个函数, 分别如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> toUpperCase = <span class="function">(<span class="params">str</span>) =&gt;</span> str.toUpperCase()</span><br><span class="line"><span class="keyword">var</span> reverse = <span class="function">(<span class="params">arr</span>) =&gt;</span> arr.reverse()</span><br><span class="line"><span class="keyword">var</span> head = <span class="function">(<span class="params">arr</span>) =&gt;</span> arr[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p>接着使用它们实现将数组末位元素大写化输出, 可以这样做:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reverseHeadUpperCase = <span class="function">(<span class="params">arr</span>) =&gt;</span> toUpperCase(head(reverse(arr)))</span><br><span class="line"></span><br><span class="line">reverseHeadUpperCase([<span class="string">'apple'</span>, <span class="string">'banana'</span>, <span class="string">'peach'</span>]) <span class="comment">// "PEACH"</span></span><br></pre></td></tr></table></figure>
+
+<p>此时在构建 <code>reverseHeadUpperCase</code> 函数的时候, 必须手动声明传入参数 arr, 是否能提供一个 <code>compose</code> 函数让使用者更加友好的使用呢? 类似如下形式:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reverseHeadUpperCase = compose(toUpperCase, head, reverse)</span><br><span class="line"></span><br><span class="line">reverseHeadUpperCase([<span class="string">'apple'</span>, <span class="string">'banana'</span>, <span class="string">'peach'</span>]) <span class="comment">// "PEACH"</span></span><br></pre></td></tr></table></figure>
+
+<p>此外 <code>compose</code> 函数符合<code>结合律</code>, 我们可以这样子使用:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">compose(compose(toUpperCase, head), reverse)</span><br><span class="line">compose(toUpperCase, compose(head, reverse))</span><br></pre></td></tr></table></figure>
+
+<p>以上两种写法与 <code>compose(toUpperCase, head, reverse)</code> 的效果完全相同, 都是依次从右到左执行传参中的函数。</p>
+<p>此外 <code>compose</code> 和 <code>map</code> 一起使用时也有相关的结合律, 以下两种写法效果相等</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">compose(map(f), map(g))</span><br><span class="line">map(compose(f, g))</span><br></pre></td></tr></table></figure>
+
+<h4 id="动手实现一个-compose-函数"><a href="#动手实现一个-compose-函数" class="headerlink" title="动手实现一个 compose 函数"></a>动手实现一个 compose 函数</h4><p>代码精华集中在一行之内, 其为众多开源库(比如 Redux) 所采用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> compose = <span class="function">(<span class="params">...args</span>) =&gt;</span> <span class="function">(<span class="params">initValue</span>) =&gt;</span> args.reduceRight(<span class="function">(<span class="params">a, c</span>) =&gt;</span> c(a), initValue)</span><br></pre></td></tr></table></figure>
+
+<h3 id="范畴论"><a href="#范畴论" class="headerlink" title="范畴论"></a>范畴论</h3><p>范畴论是数学中的一个分支。可以将范畴理解为一个容器, 把原来对值的操作，现转为对容器的操作。如下图:</p>
+<p><img src="http://with.muyunyun.cn/c65fa1b63dbe9fa0a0771e7e561dc85b.jpg-200" alt=""></p>
+<blockquote>
+<p>学习函数式编程就是学习各种函子的过程。</p>
+</blockquote>
+<p>函数式编程中, <code>函子(Functor)</code> 是实现了 <code>map</code> 函数的容器, 下文中将函子视为范畴，模型可表示如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Functor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="keyword">this</span>.value = value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  map(fn) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Functor(fn(<span class="keyword">this</span>.value))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是在函数式编程中, 要避免使用 <code>new</code> 这种面向对象的编程方式, 取而代之对外暴露了一个 <code>of</code> 的接口, 也称为 <code>pointed functor</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Functor.of = <span class="function"><span class="params">value</span> =&gt;</span> <span class="keyword">new</span> Functor(value)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Maybe-函子"><a href="#Maybe-函子" class="headerlink" title="Maybe 函子"></a>Maybe 函子</h4><p><code>Maybe 函子</code>是为了解决 <code>this.value</code> 为 null 的情形, 用法如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Maybe.of(<span class="literal">null</span>).map(<span class="function"><span class="params">r</span> =&gt;</span> r.toUpperCase()) <span class="comment">// null</span></span><br><span class="line">Maybe.of(<span class="string">'m'</span>).map(<span class="function"><span class="params">r</span> =&gt;</span> r.toUpperCase())  <span class="comment">// Maybe &#123;value: "M"&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>实现代码如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Maybe</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="keyword">this</span>.value = value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  map(fn) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.value ? <span class="keyword">new</span> Maybe(fn(<span class="keyword">this</span>.value)) : <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Maybe.of = <span class="function"><span class="params">value</span> =&gt;</span> <span class="keyword">new</span> Maybe(value)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Either-函子"><a href="#Either-函子" class="headerlink" title="Either 函子"></a>Either 函子</h4><p><code>Either 函子</code> 是为了对应 <code>if...else...</code> 的语法, 即<code>非左即右</code>。因此可以将之拆分为 <code>Left</code> 和 <code>Right</code> 两个函子, 它们的用法如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Left.of(<span class="number">1</span>).map(<span class="function"><span class="params">r</span> =&gt;</span> r + <span class="number">1</span>)  <span class="comment">// Left &#123;value: 1&#125;</span></span><br><span class="line"></span><br><span class="line">Right.of(<span class="number">1</span>).map(<span class="function"><span class="params">r</span> =&gt;</span> r + <span class="number">1</span>) <span class="comment">// Right &#123;value: 2&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Left 函子</code>实现代码如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Left</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="keyword">this</span>.value = value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  map(fn) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Left.of = <span class="function"><span class="params">value</span> =&gt;</span> <span class="keyword">new</span> Left(value)</span><br></pre></td></tr></table></figure>
+
+<p><code>Right 函子</code>实现代码如下(其实就是上面的 <code>Functor</code>):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Right</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="keyword">this</span>.value = value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  map(fn) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Right(fn(<span class="keyword">this</span>.value))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Right.of = <span class="function"><span class="params">value</span> =&gt;</span> <span class="keyword">new</span> Right(value)</span><br></pre></td></tr></table></figure>
+
+<p>具体 <code>Either</code> 函数只是对调用 <code>Left 函子</code> 或 <code>Right 函子</code> 作一层筛选, 其接收 <code>f</code>、<code>g</code> 两个函数以及一个函子(<code>Left or Right</code>)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Either = <span class="function"><span class="keyword">function</span>(<span class="params">f, g, functor</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(functor.constructor) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Left'</span>:</span><br><span class="line">      <span class="keyword">return</span> f(functor.value)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'Right'</span>:</span><br><span class="line">      <span class="keyword">return</span> g(functor.value)</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> f(functor.value)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 demo:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Either(<span class="function">(<span class="params">v</span>) =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'left'</span>, v), (v) =&gt; <span class="built_in">console</span>.log(<span class="string">'def'</span>, v), left)   <span class="comment">// left 1</span></span><br><span class="line">Either(<span class="function">(<span class="params">v</span>) =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'rigth'</span>, v), (v) =&gt; <span class="built_in">console</span>.log(<span class="string">'def'</span>, v), rigth) <span class="comment">// rigth 2</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Monad-函子"><a href="#Monad-函子" class="headerlink" title="Monad 函子"></a>Monad 函子</h4><p>函子会发生嵌套, 比如下面这样:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Functor.of(Functor.of(<span class="number">1</span>)) <span class="comment">// Functor &#123; value: Functor &#123; value: 1 &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Monad 函子</code> 对外暴露了 <code>join</code> 和 <code>flatmap</code> 接口, 调用者从而可以扁平化嵌套的函子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Monad</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="keyword">this</span>.value = value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  map(fn) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Monad(fn(<span class="keyword">this</span>.value))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  join() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.value</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  flatmap(fn) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.map(fn).join()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Monad.of = <span class="function"><span class="params">value</span> =&gt;</span> <span class="keyword">new</span> Monad(value)</span><br></pre></td></tr></table></figure>
+
+<p>使用方法:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// join</span></span><br><span class="line">Monad.of(Monad.of(<span class="number">1</span>).join()) <span class="comment">// Monad &#123; value: 1 &#125;</span></span><br><span class="line">Monad.of(Monad.of(<span class="number">1</span>)).join() <span class="comment">// Monad &#123; value: 1 &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// flatmap</span></span><br><span class="line">Monad.of(<span class="number">1</span>).flatmap(<span class="function"><span class="params">r</span> =&gt;</span> r + <span class="number">1</span>)  <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Monad 函子可以运用在 I/O 这种不纯的操作上将之变为纯函数的操作，目前比较懵懂，日后补充。</p>
+</blockquote>
+<h3 id="后记-1-数组字符串方法小结-是否对原值有影响"><a href="#后记-1-数组字符串方法小结-是否对原值有影响" class="headerlink" title="后记 1: 数组字符串方法小结(是否对原值有影响)"></a>后记 1: 数组字符串方法小结(是否对原值有影响)</h3><h4 id="不会对原数组有影响的方法"><a href="#不会对原数组有影响的方法" class="headerlink" title="不会对原数组有影响的方法"></a>不会对原数组有影响的方法</h4><h5 id="slice"><a href="#slice" class="headerlink" title="slice"></a>slice</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">var</span> result = test.slice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// [1, 2, 3]</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// [1]</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">var</span> result = test.concat(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// [1, 2, 3]</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="对原数组有影响的方法"><a href="#对原数组有影响的方法" class="headerlink" title="对原数组有影响的方法"></a>对原数组有影响的方法</h4><h5 id="splice-这个需要特别记一下"><a href="#splice-这个需要特别记一下" class="headerlink" title="splice(这个需要特别记一下)"></a>splice(这个需要特别记一下)</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">var</span> result = test.splice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// [2, 3]</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// [1]</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">arr.sort(<span class="function">(<span class="params">r1, r2</span>) =&gt;</span> (r1 - r2))</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(arr) <span class="comment">// [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="reverse"><a href="#reverse" class="headerlink" title="reverse"></a>reverse</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">var</span> result = test.reverse()</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// [3, 2, 1]</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// [3, 2, 1]</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="push-pop-unshift-shift"><a href="#push-pop-unshift-shift" class="headerlink" title="push/pop/unshift/shift"></a>push/pop/unshift/shift</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">var</span> result = test.push(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// [1, 2, 3, 4]</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="不会对原字符串造成影响的方法"><a href="#不会对原字符串造成影响的方法" class="headerlink" title="不会对原字符串造成影响的方法"></a>不会对原字符串造成影响的方法</h4><h5 id="substr-substring-slice"><a href="#substr-substring-slice" class="headerlink" title="substr/substring/slice"></a>substr/substring/slice</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// substr</span></span><br><span class="line"><span class="keyword">var</span> test = <span class="string">'abc'</span></span><br><span class="line"><span class="keyword">var</span> result = test.substr(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// 'abc'</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// a</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// substring</span></span><br><span class="line"><span class="keyword">var</span> test = <span class="string">'abc'</span></span><br><span class="line"><span class="keyword">var</span> result = test.substring(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// 'abc'</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// a</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// slice</span></span><br><span class="line"><span class="keyword">var</span> test = <span class="string">'abc'</span></span><br><span class="line"><span class="keyword">var</span> result = test.slice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(test)   <span class="comment">// 'abc'</span></span><br><span class="line"><span class="built_in">console</span>.log(result) <span class="comment">// a</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://mostly-adequate.gitbooks.io/mostly-adequate-guide" target="_blank" rel="noopener">mostly-adequate-guide</a></li>
+<li><a href="https://llh911001.gitbooks.io/mostly-adequate-guide-chinese" target="_blank" rel="noopener">JavaScript 函数式编程指南</a></li>
+<li><a href="https://github.com/mqyqingfeng/Blog/issues/42" target="_blank" rel="noopener">JavaScript 专题之函数柯里化</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2017/02/fp-tutorial.html" target="_blank" rel="noopener">函数式编程入门教程</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span class="type">Title:</span><a href="/posts/8b09c168/">函数式编程入门</a></p>
+  <p><span class="type">Author:</span><a href="https://github.com/MuYunyun" target="_blank" title="访问 牧云云 的个人博客">牧云云</a></p>
+  <p><span class="type">Posted On:</span>2019/02/05 13:02</p>
+  <p><span class="type">Update Time:</span>2019/02/06/ 22:02</p>
+  <p><span class="type">Origin Link:</span><a href="/posts/8b09c168/" title="函数式编程入门">http://muyunyun.cn/posts/8b09c168/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://muyunyun.cn/posts/8b09c168/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>EULA:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
+</div>
+<script>
+  var clipboard = new Clipboard('.fa-clipboard');
+	  clipboard.on('success', $(function(){
+	    $(".fa-clipboard").click(function(){
+        swal({
+          title: "",
+          text: '复制成功',
+          html: false,
+          timer: 500,
+          showConfirmButton: false
+          });
+      });
+    }));
+</script>
+
+      
+    </div>
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/fp/" rel="tag"># fp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/24141498/" rel="prev" title="2018 年度总结 —— 缘见">
+      <i class="fa fa-chevron-left"></i> 2018 年度总结 —— 缘见
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/9f41fc98/" rel="next" title="探索 React Fiber 数据结构">
+      探索 React Fiber 数据结构 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令式编程和声明式编程"><span class="nav-number">1.</span> <span class="nav-text">命令式编程和声明式编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是函数式编程"><span class="nav-number">2.</span> <span class="nav-text">什么是函数式编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#柯里化-curry"><span class="nav-number">3.</span> <span class="nav-text">柯里化(curry)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#动手实现一个-curry-函数"><span class="nav-number">3.1.</span> <span class="nav-text">动手实现一个 curry 函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码组合-compose"><span class="nav-number">4.</span> <span class="nav-text">代码组合(compose)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#动手实现一个-compose-函数"><span class="nav-number">4.1.</span> <span class="nav-text">动手实现一个 compose 函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#范畴论"><span class="nav-number">5.</span> <span class="nav-text">范畴论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Maybe-函子"><span class="nav-number">5.1.</span> <span class="nav-text">Maybe 函子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Either-函子"><span class="nav-number">5.2.</span> <span class="nav-text">Either 函子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Monad-函子"><span class="nav-number">5.3.</span> <span class="nav-text">Monad 函子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后记-1-数组字符串方法小结-是否对原值有影响"><span class="nav-number">6.</span> <span class="nav-text">后记 1: 数组字符串方法小结(是否对原值有影响)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不会对原数组有影响的方法"><span class="nav-number">6.1.</span> <span class="nav-text">不会对原数组有影响的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#slice"><span class="nav-number">6.1.1.</span> <span class="nav-text">slice</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#concat"><span class="nav-number">6.1.2.</span> <span class="nav-text">concat</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对原数组有影响的方法"><span class="nav-number">6.2.</span> <span class="nav-text">对原数组有影响的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#splice-这个需要特别记一下"><span class="nav-number">6.2.1.</span> <span class="nav-text">splice(这个需要特别记一下)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#sort"><span class="nav-number">6.2.2.</span> <span class="nav-text">sort</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#reverse"><span class="nav-number">6.2.3.</span> <span class="nav-text">reverse</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#push-pop-unshift-shift"><span class="nav-number">6.2.4.</span> <span class="nav-text">push&#x2F;pop&#x2F;unshift&#x2F;shift</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不会对原字符串造成影响的方法"><span class="nav-number">6.3.</span> <span class="nav-text">不会对原字符串造成影响的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#substr-substring-slice"><span class="nav-number">6.3.1.</span> <span class="nav-text">substr&#x2F;substring&#x2F;slice</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="牧云云"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">牧云云</p>
+  <div class="site-description" itemprop="description">是云随风，倚码为诗</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MuYunyun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MuYunyun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/YunyunMu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;YunyunMu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:muyy95@gmail.com" title="E-Mail → mailto:muyy95@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">牧云云</span>
+  <span class="with-love"><i class="fa fa-globe"></i></span>
+  <span class="author" itemprop="copyrightHolder"><a href="http://www.miitbeian.gov.cn/" target="_blank" rel="noopener">浙ICP备18050494号</a></span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="https://cdnjs.gtimg.com/cdnjs/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/music/aplayer.js"></script>
+  <script type="text/javascript" src="/js/music/init.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/>
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+  <script>
+  var gitment = new Gitment({
+    id: window.location.pathname, // 可选。默认为 location.href
+    owner: 'MuYunyun',
+    repo: 'MuYunyun.github.io',
+    oauth: {
+      client_id: 'f29b1fd73d2d4aee9abc',
+      client_secret: '9bef686f836f34555372c7777dd41f02a6e0e8a1',
+    },
+    perPage: 10,
+  })
+  gitment.render('container')
+  </script>
+  
+<div id="hexo-helper-live2d">
+  <canvas id="live2dcanvas" width="150" height="300"></canvas>
+</div>
+<style>
+  #live2dcanvas{
+    position: fixed;
+    width: 150px;
+    height: 300px;
+    opacity:10;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    bottom: -20px;
+  }
+</style>
+<script type="text/javascript" src="/live2d/device.min.js"></script>
+<script type="text/javascript">
+const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
+(function(){
+  if((typeof(device) != 'undefined') && (device.mobile())){
+    var trElement = document.getElementById('hexo-helper-live2d');
+    trElement.parentNode.removeChild(trElement);
+    return;
+  }else
+    if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
+  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/tororo.model.json", 0.5);});
+})();
+</script>
+
+</body>
+</html>

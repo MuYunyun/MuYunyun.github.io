@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"muyunyun.cn","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="阅读完本文可以了解到 0.1 + 0.2 为什么等于 0.30000000000000004 以及 JavaScript 中最大安全数是如何来的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探寻 JavaScript 精度问题">
+<meta property="og:url" content="http://muyunyun.cn/posts/49fa8af8/index.html">
+<meta property="og:site_name" content="Time Flying">
+<meta property="og:description" content="阅读完本文可以了解到 0.1 + 0.2 为什么等于 0.30000000000000004 以及 JavaScript 中最大安全数是如何来的。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://with.muyunyun.cn/dda7d5b38676abfa13afb344f8a792ed.jpg-300">
+<meta property="og:image" content="http://with.muyunyun.cn/5c268e4bd6e0bf2466598d9d5cb58a16.jpg-200">
+<meta property="og:image" content="http://with.muyunyun.cn/5b7c0dcc0b1770b6eed238e288eb4c0e.jpg-300">
+<meta property="og:image" content="http://with.muyunyun.cn/cb0ef89aa0ed6e8d32b90d1a29cfc9e1.jpg-300">
+<meta property="article:published_time" content="2018-10-03T08:04:01.000Z">
+<meta property="article:modified_time" content="2018-11-26T14:48:20.564Z">
+<meta property="article:author" content="牧云云">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="精度">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://with.muyunyun.cn/dda7d5b38676abfa13afb344f8a792ed.jpg-300">
+
+<link rel="canonical" href="http://muyunyun.cn/posts/49fa8af8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>探寻 JavaScript 精度问题 | Time Flying</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Time Flying" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Time Flying</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/MuYunyun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://muyunyun.cn/posts/49fa8af8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="牧云云">
+      <meta itemprop="description" content="是云随风，倚码为诗">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Time Flying">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          探寻 JavaScript 精度问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-10-03 16:04:01" itemprop="dateCreated datePublished" datetime="2018-10-03T16:04:01+08:00">2018-10-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScrip/" itemprop="url" rel="index"><span itemprop="name">JavaScrip</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScrip/%E7%B2%BE%E5%BA%A6/" itemprop="url" rel="index"><span itemprop="name">精度</span></a>
+                </span>
+            </span>
+
+          
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.wordcount</span>
+                
+                <span title="post.wordcount">
+                  1,131 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.min2read</span>
+                
+                <span title="post.min2read">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>阅读完本文可以了解到 <code>0.1 + 0.2</code> 为什么等于 <code>0.30000000000000004</code> 以及 JavaScript 中最大安全数是如何来的。</p>
+<a id="more"></a>
+
+<h3 id="十进制小数转为二进制小数方法"><a href="#十进制小数转为二进制小数方法" class="headerlink" title="十进制小数转为二进制小数方法"></a>十进制小数转为二进制小数方法</h3><p>拿 173.8125 举例如何将之转化为二进制小数。</p>
+<p>①. 针对整数部分 173，采取<code>除 2 取余，逆序排列</code>;</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">173</span> / <span class="number">2</span> = <span class="number">86</span> ... <span class="number">1</span></span><br><span class="line"><span class="number">86</span> / <span class="number">2</span> = <span class="number">43</span> ... <span class="number">0</span></span><br><span class="line"><span class="number">43</span> / <span class="number">2</span> = <span class="number">21</span> ... <span class="number">1</span>   ↑</span><br><span class="line"><span class="number">21</span> / <span class="number">2</span> = <span class="number">10</span> ... <span class="number">1</span>   | 逆序排列</span><br><span class="line"><span class="number">10</span> / <span class="number">2</span> = <span class="number">5</span> ... <span class="number">0</span>    |</span><br><span class="line"><span class="number">5</span> / <span class="number">2</span> = <span class="number">2</span> ... <span class="number">1</span>     |</span><br><span class="line"><span class="number">2</span> / <span class="number">2</span> = <span class="number">1</span> ... <span class="number">0</span></span><br><span class="line"><span class="number">1</span> / <span class="number">2</span> = <span class="number">0</span> ... <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>得整数部分的二进制为 <code>10101101</code>。</p>
+<p>②. 针对小数部分 0.8125，采用<code>乘 2 取整，顺序排列</code>;</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.8125</span> * <span class="number">2</span> = <span class="number">1.625</span>  |</span><br><span class="line"><span class="number">0.625</span> * <span class="number">2</span> = <span class="number">1.25</span>    | 顺序排列</span><br><span class="line"><span class="number">0.25</span> * <span class="number">2</span> = <span class="number">0.5</span>      |</span><br><span class="line"><span class="number">0.5</span> * <span class="number">2</span> = <span class="number">1</span>         ↓</span><br></pre></td></tr></table></figure>
+
+<p>得小数部分的二进制为 <code>1101</code>。</p>
+<p>③. 将前面两部的结果相加，结果为 <code>10101101.1101</code>;</p>
+<h3 id="小心，二进制小数丢失了精度！"><a href="#小心，二进制小数丢失了精度！" class="headerlink" title="小心，二进制小数丢失了精度！"></a>小心，二进制小数丢失了精度！</h3><p>根据上面的知识，将十进制小数 <code>0.1</code> 转为二进制：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.1</span> * <span class="number">2</span> = <span class="number">0.2</span></span><br><span class="line"><span class="number">0.2</span> * <span class="number">2</span> = <span class="number">0.4</span> <span class="comment">// 注意这里</span></span><br><span class="line"><span class="number">0.4</span> * <span class="number">2</span> = <span class="number">0.8</span></span><br><span class="line"><span class="number">0.8</span> * <span class="number">2</span> = <span class="number">1.6</span></span><br><span class="line"><span class="number">0.6</span> * <span class="number">2</span> = <span class="number">1.2</span></span><br><span class="line"><span class="number">0.2</span> * <span class="number">2</span> = <span class="number">0.4</span> <span class="comment">// 注意这里，循环开始</span></span><br><span class="line"><span class="number">0.4</span> * <span class="number">2</span> = <span class="number">0.8</span></span><br><span class="line"><span class="number">0.8</span> * <span class="number">2</span> = <span class="number">1.6</span></span><br><span class="line"><span class="number">0.6</span> * <span class="number">2</span> = <span class="number">1.2</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>可以发现有限十进制小数 <code>0.1</code> 却转化成了无限二进制小数 <code>0.00011001100...</code>，可以看到精度在转化过程中丢失了！</p>
+<p>能被转化为有限二进制小数的十进制小数的最后一位必然以 5 结尾(因为只有 0.5 * 2 才能变为整数)。所以十进制中一位小数 <code>0.1 ~ 0.9</code> 当中除了 <code>0.5</code> 之外的值在转化成二进制的过程中都丢失了精度。</p>
+<h3 id="推导-0-1-0-2-为何等于-0-30000000000000004"><a href="#推导-0-1-0-2-为何等于-0-30000000000000004" class="headerlink" title="推导 0.1 + 0.2 为何等于 0.30000000000000004"></a>推导 0.1 + 0.2 为何等于 0.30000000000000004</h3><p>在 JavaScript 中所有数值都以 IEEE-754 标准的 <code>64 bit</code> 双精度浮点数进行存储的。先来了解下 IEEE-754 标准下的<a href="https://zh.wikipedia.org/wiki/%E9%9B%99%E7%B2%BE%E5%BA%A6%E6%B5%AE%E9%BB%9E%E6%95%B8" target="_blank" rel="noopener">双精度浮点数</a>。</p>
+<p><img src="http://with.muyunyun.cn/dda7d5b38676abfa13afb344f8a792ed.jpg-300" alt=""></p>
+<p>这幅图很关键，可以从图中看到 IEEE-754 标准下双精度浮点数由三部分组成，分别如下：</p>
+<ul>
+<li>sign(符号): 占 1 bit, 表示正负;</li>
+<li>exponent(指数): 占 11 bit，表示范围;</li>
+<li>mantissa(尾数): 占 52 bit，表示精度，多出的末尾如果是 1 需要进位;</li>
+</ul>
+<p>推荐阅读 <a href="https://github.com/camsong/blog/issues/9" target="_blank" rel="noopener">JavaScript 浮点数陷阱及解法</a>，阅读完该文后可以了解到以下公式的由来。</p>
+<p><img src="http://with.muyunyun.cn/5c268e4bd6e0bf2466598d9d5cb58a16.jpg-200" alt=""></p>
+<blockquote>
+<p>精度位总共是 53 bit，因为用科学计数法表示，所以首位固定的 1 就没有占用空间。即公式中 (M + 1) 里的 1。另外公式里的 1023 是 2^11 的一半。小于 1023 的用来表示小数，大于 1023 的用来表示整数。</p>
+</blockquote>
+<blockquote>
+<p>指数可以控制到 2^1024 - 1，而精度最大只达到 2^53 - 1，两者相比可以得出 JavaScript 实际可以精确表示的数字其实很少。</p>
+</blockquote>
+<p><code>0.1</code> 转化为二进制为 <code>0.0001100110011...</code>，用科学计数法表示为 <code>1.100110011... x 2^(-4)</code>，根据上述公式，<code>S</code> 为 <code>0</code>(1 bit)，<code>E</code> 为 <code>-4 + 1023</code>，对应的二进制为 <code>01111111011</code>(11 bit)，<code>M</code> 为 <code>1001100110011001100110011001100110011001100110011010</code>(52 bit，另外注意末尾的进位)，<code>0.1</code> 的存储示意图如下:</p>
+<p><img src="http://with.muyunyun.cn/5b7c0dcc0b1770b6eed238e288eb4c0e.jpg-300" alt=""></p>
+<p>同理，<code>0.2</code> 转化为二进制为 <code>0.001100110011...</code>，用科学计数法表示为 <code>1.100110011... x 2^(-3)</code>，根据上述公式，<code>E</code> 为 <code>-3 + 1023</code>，对应的二进制为 <code>01111111100</code>, <code>M</code> 为 <code>1001100110011001100110011001100110011001100110011010</code>, <code>0.2</code> 的存储示意图如下:</p>
+<p><img src="http://with.muyunyun.cn/cb0ef89aa0ed6e8d32b90d1a29cfc9e1.jpg-300" alt=""></p>
+<p><code>0.1 + 0.2</code> 即 2^(-4) x 1.1001100110011001100110011001100110011001100110011010 与 2^(-3) x 1.1001100110011001100110011001100110011001100110011010 之和</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算过程</span></span><br><span class="line"><span class="number">0.00011001100110011001100110011001100110011001100110011010</span></span><br><span class="line"><span class="number">0.0011001100110011001100110011001100110011001100110011010</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相加得</span></span><br><span class="line"><span class="number">0.01001100110011001100110011001100110011001100110011001110</span></span><br></pre></td></tr></table></figure>
+
+<p><code>0.01001100110011001100110011001100110011001100110011001110</code> 转化为十进制就是 <code>0.30000000000000004</code>。验证完成!</p>
+<h3 id="JavaScript-的最大安全数是如何来的"><a href="#JavaScript-的最大安全数是如何来的" class="headerlink" title="JavaScript 的最大安全数是如何来的"></a>JavaScript 的最大安全数是如何来的</h3><p>根据双精度浮点数的构成，精度位数是 <code>53 bit</code>。安全数的意思是在 <code>-2^53 ~ 2^53</code> 内的整数(不包括边界)与唯一的双精度浮点数互相对应。举个例子比较好理解：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Math</span>.pow(<span class="number">2</span>, <span class="number">53</span>) === <span class="built_in">Math</span>.pow(<span class="number">2</span>, <span class="number">53</span>) + <span class="number">1</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Math.pow(2, 53)</code> 竟然与 <code>Math.pow(2, 53) + 1</code> 相等！这是因为 Math.pow(2, 53) + 1 已经超过了尾数的精度限制(53 bit)，在这个例子中 <code>Math.pow(2, 53)</code> 和 <code>Math.pow(2, 53) + 1</code> 对应了同一个双精度浮点数。所以 <code>Math.pow(2, 53)</code> 就不是安全数了。</p>
+<blockquote>
+<p>最大的安全数为 <code>Math.pow(2, 53) - 1</code>，即 <code>9007199254740991</code>。</p>
+</blockquote>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><ul>
+<li><a href="http://justjavac.com/codepuzzle/2012/11/11/codepuzzle-float-who-stole-your-accuracy.html" target="_blank" rel="noopener">代码之谜系列</a></li>
+<li><a href="http://www.binaryconvert.com/convert_double.html" target="_blank" rel="noopener">IEEE-754 进制转换图生成</a></li>
+<li><a href="https://github.com/camsong/blog/issues/9" target="_blank" rel="noopener">JavaScript 浮点数陷阱及解法</a>: 推荐阅读</li>
+<li><a href="https://www.zhihu.com/question/29010688" target="_blank" rel="noopener">javascript 里最大的安全的整数为什么是2的53次方减一</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span class="type">Title:</span><a href="/posts/49fa8af8/">探寻 JavaScript 精度问题</a></p>
+  <p><span class="type">Author:</span><a href="https://github.com/MuYunyun" target="_blank" title="访问 牧云云 的个人博客">牧云云</a></p>
+  <p><span class="type">Posted On:</span>2018/10/03 16:10</p>
+  <p><span class="type">Update Time:</span>2018/11/26/ 22:11</p>
+  <p><span class="type">Origin Link:</span><a href="/posts/49fa8af8/" title="探寻 JavaScript 精度问题">http://muyunyun.cn/posts/49fa8af8/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://muyunyun.cn/posts/49fa8af8/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>EULA:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
+</div>
+<script>
+  var clipboard = new Clipboard('.fa-clipboard');
+	  clipboard.on('success', $(function(){
+	    $(".fa-clipboard").click(function(){
+        swal({
+          title: "",
+          text: '复制成功',
+          html: false,
+          timer: 500,
+          showConfirmButton: false
+          });
+      });
+    }));
+</script>
+
+      
+    </div>
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/tags/%E7%B2%BE%E5%BA%A6/" rel="tag"># 精度</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/da72b66c/" rel="prev" title="从 0 到 1 实现 React 系列 —— 6.onChange 事件以及受控组件">
+      <i class="fa fa-chevron-left"></i> 从 0 到 1 实现 React 系列 —— 6.onChange 事件以及受控组件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/73be8760/" rel="next" title="解读 IoC 框架 InversifyJS">
+      解读 IoC 框架 InversifyJS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#十进制小数转为二进制小数方法"><span class="nav-number">1.</span> <span class="nav-text">十进制小数转为二进制小数方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小心，二进制小数丢失了精度！"><span class="nav-number">2.</span> <span class="nav-text">小心，二进制小数丢失了精度！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#推导-0-1-0-2-为何等于-0-30000000000000004"><span class="nav-number">3.</span> <span class="nav-text">推导 0.1 + 0.2 为何等于 0.30000000000000004</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript-的最大安全数是如何来的"><span class="nav-number">4.</span> <span class="nav-text">JavaScript 的最大安全数是如何来的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关链接"><span class="nav-number">5.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="牧云云"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">牧云云</p>
+  <div class="site-description" itemprop="description">是云随风，倚码为诗</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MuYunyun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MuYunyun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/YunyunMu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;YunyunMu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:muyy95@gmail.com" title="E-Mail → mailto:muyy95@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">牧云云</span>
+  <span class="with-love"><i class="fa fa-globe"></i></span>
+  <span class="author" itemprop="copyrightHolder"><a href="http://www.miitbeian.gov.cn/" target="_blank" rel="noopener">浙ICP备18050494号</a></span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="https://cdnjs.gtimg.com/cdnjs/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/music/aplayer.js"></script>
+  <script type="text/javascript" src="/js/music/init.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/>
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+  <script>
+  var gitment = new Gitment({
+    id: window.location.pathname, // 可选。默认为 location.href
+    owner: 'MuYunyun',
+    repo: 'MuYunyun.github.io',
+    oauth: {
+      client_id: 'f29b1fd73d2d4aee9abc',
+      client_secret: '9bef686f836f34555372c7777dd41f02a6e0e8a1',
+    },
+    perPage: 10,
+  })
+  gitment.render('container')
+  </script>
+  
+<div id="hexo-helper-live2d">
+  <canvas id="live2dcanvas" width="150" height="300"></canvas>
+</div>
+<style>
+  #live2dcanvas{
+    position: fixed;
+    width: 150px;
+    height: 300px;
+    opacity:10;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    bottom: -20px;
+  }
+</style>
+<script type="text/javascript" src="/live2d/device.min.js"></script>
+<script type="text/javascript">
+const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
+(function(){
+  if((typeof(device) != 'undefined') && (device.mobile())){
+    var trElement = document.getElementById('hexo-helper-live2d');
+    trElement.parentNode.removeChild(trElement);
+    return;
+  }else
+    if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
+  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/tororo.model.json", 0.5);});
+})();
+</script>
+
+</body>
+</html>

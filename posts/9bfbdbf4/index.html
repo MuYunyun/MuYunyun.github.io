@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"muyunyun.cn","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 React 全家桶搭建一个后台管理系统">
+<meta property="og:url" content="http://muyunyun.cn/posts/9bfbdbf4/index.html">
+<meta property="og:site_name" content="Time Flying">
+<meta property="og:description" content="使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://with.muyunyun.cn/007a8b596b798249ed85d11307c959cb.jpg-muyy">
+<meta property="og:image" content="http://files.cnblogs.com/files/MuYunyun/reactSPA.gif">
+<meta property="og:image" content="http://files.cnblogs.com/files/MuYunyun/todoList.gif">
+<meta property="og:image" content="http://with.muyunyun.cn/a40c3540ca26a56b28506d14125c04c1.jpg-400">
+<meta property="article:published_time" content="2017-06-14T17:16:07.000Z">
+<meta property="article:modified_time" content="2018-11-26T14:48:20.566Z">
+<meta property="article:author" content="牧云云">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Redux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://with.muyunyun.cn/007a8b596b798249ed85d11307c959cb.jpg-muyy">
+
+<link rel="canonical" href="http://muyunyun.cn/posts/9bfbdbf4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>使用 React 全家桶搭建一个后台管理系统 | Time Flying</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Time Flying" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Time Flying</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/MuYunyun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://muyunyun.cn/posts/9bfbdbf4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="牧云云">
+      <meta itemprop="description" content="是云随风，倚码为诗">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Time Flying">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用 React 全家桶搭建一个后台管理系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-06-15 01:16:07" itemprop="dateCreated datePublished" datetime="2017-06-15T01:16:07+08:00">2017-06-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.wordcount</span>
+                
+                <span title="post.wordcount">
+                  2,307 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.min2read</span>
+                
+                <span title="post.min2read">
+                  10 分钟
+                </span>
+              
+            </div>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="http://with.muyunyun.cn/007a8b596b798249ed85d11307c959cb.jpg-muyy" alt=""></p>
+<p>使用React技术栈搭建一个后台管理系统最初是为了上手公司的业务，后来发现这个项目还能把平时遇到的有趣的demo给整合进去。此文尝试对相关的技术栈以及如何在该项目中引人Redux进行分析。</p>
+<a id="more"></a>
+
+<h2 id="项目地址以及局部展示"><a href="#项目地址以及局部展示" class="headerlink" title="项目地址以及局部展示"></a>项目地址以及局部展示</h2><ul>
+<li><p><a href="https://github.com/MuYunyun/reactSPA" target="_blank" rel="noopener">项目地址</a></p>
+</li>
+<li><p>小模块展示：<br><img src="http://files.cnblogs.com/files/MuYunyun/reactSPA.gif" alt=""></p>
+</li>
+<li><p>redux在项目中的运用demo展示<br><img src="http://files.cnblogs.com/files/MuYunyun/todoList.gif" alt=""></p>
+</li>
+</ul>
+<h2 id="项目目录结构"><a href="#项目目录结构" class="headerlink" title="项目目录结构"></a>项目目录结构</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">├── build.js                   项目打包后的文件</span><br><span class="line">├──<span class="built_in"> config </span>                    webpack配置文件</span><br><span class="line">│   ├──<span class="built_in">..</span>.</span><br><span class="line">│   ├──webpack.config.dev.js   开发环境配置</span><br><span class="line">│   ├──webpack.config.prod.js  生产环境配置</span><br><span class="line">├── node_modules               node模块目录</span><br><span class="line">├── public</span><br><span class="line">│   └──index.html</span><br><span class="line">├── scripts</span><br><span class="line">│   ├── build.js               打包项目文件</span><br><span class="line">│   ├── start.js               启动项目文件</span><br><span class="line">│   └── test.js                测试项目文件</span><br><span class="line">├── src</span><br><span class="line">│   ├──<span class="built_in"> client </span>                汇聚(入口)目录</span><br><span class="line">│   ├── common                 核心目录</span><br><span class="line">│   │   ├── actions            redux中的action</span><br><span class="line">│   │   ├── components         通用功能组件</span><br><span class="line">│   │   ├── container          通用样式组件</span><br><span class="line">│   │   ├── images</span><br><span class="line">│   │   ├── pages              页面模块</span><br><span class="line">│   │   ├── reducers           redux中的reducer</span><br><span class="line">│   │   ├── utils              工具类</span><br><span class="line">│   │   │   ├── config.js      通用配置</span><br><span class="line">│   │   │   ├── menu.js        菜单配置</span><br><span class="line">│   │   │   └── ajax.js        ajax模块(日后用到)</span><br><span class="line">│   │   └── routes.js          前端路由</span><br><span class="line">│   └──<span class="built_in"> server </span>                服务端目录(日后用到)</span><br><span class="line">│       └── controller</span><br><span class="line">├── .gitignore</span><br><span class="line">├── package.json</span><br><span class="line">├── README.md</span><br><span class="line">└── yarn.lock</span><br></pre></td></tr></table></figure>
+<p>项目的初始结构和构造原因已罗列如上，由于过些日子会引人ts，所以项目结构必然还会改动，但肯定基于这基本雏形扩展的。</p>
+<p>下面对目录结构作以下说明</p>
+<ul>
+<li>项目最初始是用 <a href="https://github.com/facebookincubator/create-react-app" target="_blank" rel="noopener">create-react-app</a> 初始化的，create-react-app 是Facebook官方提供的 React 脚手架，也是业界最优秀的 React 应用开发工具之一;</li>
+<li>client 作为入口目录，到时候可以把第三方中间件也放在此处;</li>
+<li>container 和 components 存放的都是 react 组件,区别如下表。但是我把和样式有关的组件就放在container中，把和功能有关的模块(比如自己分装的表格组件、弹出输入框组件等)就放到components中，若日后有需要，container 和 component 组件都是可以在 Redux 数据流中的。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">container</th>
+<th align="center">component</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">目的</td>
+<td align="center">如何工作(数据获取,状态更新)</td>
+<td align="center">如何显示(样式，布局)</td>
+</tr>
+<tr>
+<td align="center">是否在 Redux 数据流中</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center">读取数据</td>
+<td align="center">从 Redux 获取 state</td>
+<td align="center">从 props 获取数据</td>
+</tr>
+<tr>
+<td align="center">修改数据</td>
+<td align="center">向 Redux 派发 actions</td>
+<td align="center">从 props 调用回调函数</td>
+</tr>
+<tr>
+<td align="center">实现方式</td>
+<td align="center">向react-redux生成</td>
+<td align="center">手写</td>
+</tr>
+<tr>
+<td align="center">* ajax 模块到时候计划用 fetch 封装一个ajax，感觉使用 fetch 还是蛮便利的。</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">* server 层就是作为网关层，日后计划用来写 node 的。</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="技术栈相关"><a href="#技术栈相关" class="headerlink" title="技术栈相关"></a>技术栈相关</h2><p>虽然用到的技术栈众多，但是自己也谈不上熟练运用，多半是边查API边用的，所以只罗列些自己用相关的技术栈解决的点;</p>
+<h3 id="webpack-2-x"><a href="#webpack-2-x" class="headerlink" title="webpack(2.x)"></a>webpack(2.x)</h3><p>4月的时候 create-react-app 还是基于 webpack(1.x) 构建的，5月27号升到了webpack(2.6),于是我也进行了 webpack 的版本升级。</p>
+<h4 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h4><p><a href="https://github.com/ant-design/babel-plugin-import" target="_blank" rel="noopener">babel-plugin-import</a> 是一个用于按需加载组件代码和样式的 babel 插件，使用此插件后，在引人 antd 相应模块就能实现按需引人，在config/webpack.config.dev.js 文件中作如下修改:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">        test: <span class="regexp">/\.(js|jsx)$/</span>,</span><br><span class="line">        include: paths.appSrc,</span><br><span class="line">        loader: <span class="built_in">require</span>.resolve(<span class="string">'babel-loader'</span>),</span><br><span class="line">        options: &#123;</span><br><span class="line">          plugins: [</span><br><span class="line">            <span class="string">"transform-decorators-legacy"</span>,  <span class="comment">// 引人 ES7 的装饰器 @</span></span><br><span class="line">            [<span class="string">'import'</span>, [&#123; <span class="attr">libraryName</span>: <span class="string">'antd'</span>, <span class="attr">style</span>: <span class="literal">true</span> &#125;]],</span><br><span class="line">          ],</span><br><span class="line">          cacheDirectory: <span class="literal">true</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+<h4 id="引人less"><a href="#引人less" class="headerlink" title="引人less"></a>引人less</h4><p>首先引人 <a href="https://github.com/webpack-contrib/less-loader" target="_blank" rel="noopener">less-loader</a> 来加载 less 样式，同时修改 config/webpack.config.dev.js 文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">  use: [</span><br><span class="line">    <span class="built_in">require</span>.resolve(<span class="string">'style-loader'</span>),</span><br><span class="line">    <span class="built_in">require</span>.resolve(<span class="string">'css-loader'</span>),</span><br><span class="line">    &#123;</span><br><span class="line">      loader: <span class="built_in">require</span>.resolve(<span class="string">'postcss-loader'</span>),</span><br><span class="line">      options: &#123;</span><br><span class="line">        ident: <span class="string">'postcss'</span>, <span class="comment">//https://webpack.js.org/guides/migrating/#complex-options</span></span><br><span class="line">        plugins: <span class="function"><span class="params">()</span> =&gt;</span> [</span><br><span class="line">          <span class="built_in">require</span>(<span class="string">'postcss-flexbugs-fixes'</span>),</span><br><span class="line">          autoprefixer(&#123;</span><br><span class="line">            browsers: [</span><br><span class="line">              <span class="string">'&gt;1%'</span>,</span><br><span class="line">              <span class="string">'last 4 versions'</span>,</span><br><span class="line">              <span class="string">'Firefox ESR'</span>,</span><br><span class="line">              <span class="string">'not ie &lt; 9'</span>, <span class="comment">// React doesn't support IE8 anyway</span></span><br><span class="line">            ],</span><br><span class="line">            flexbox: <span class="string">'no-2009'</span>,</span><br><span class="line">          &#125;),</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      loader: <span class="built_in">require</span>.resolve(<span class="string">'less-loader'</span>),</span><br><span class="line">      options: &#123;</span><br><span class="line">        modifyVars: &#123; <span class="string">"@primary-color"</span>: <span class="string">"#1DA57A"</span> &#125;,  <span class="comment">// 这里利用了 less-loader 的 modifyVars 来进行主题配置， 变量和其他配置方式可以参考 [配置主题](https://ant.design/docs/react/customize-theme-cn) 文档。</span></span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h4 id="一键发布到-gh-pages"><a href="#一键发布到-gh-pages" class="headerlink" title="一键发布到 gh-pages"></a>一键发布到 gh-pages</h4><p>用到了 <a href="https://github.com/tschaub/gh-pages" target="_blank" rel="noopener">gh-pages</a> ,使用 npm run deploy 一键发布到自己的gh-pages上，姑且把gh-pages当成生产环境吧，所以在修改config/webpack.config.dev.js 文件的同时也要对 config/webpack.config.prod.js 作出一模一样的修改。</p>
+<h4 id="引用路径的缩写"><a href="#引用路径的缩写" class="headerlink" title="引用路径的缩写"></a>引用路径的缩写</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">alias: &#123;</span><br><span class="line">      <span class="string">'react-native'</span>: <span class="string">'react-native-web'</span>,</span><br><span class="line">      components: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/components'</span>,</span><br><span class="line">      container: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/container'</span>,</span><br><span class="line">      images: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/images'</span>,</span><br><span class="line">      pages: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/pages'</span>,</span><br><span class="line">      utils: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/utils'</span>,</span><br><span class="line">      data: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/server/data'</span>,</span><br><span class="line">      actions: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/actions'</span>,</span><br><span class="line">      reducers: path.resolve(__dirname, <span class="string">'..'</span>) + <span class="string">'/src/common/reducers'</span>,</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>配置了引用路径的缩写后，就可以在任意地方如这样引用，比如</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Table <span class="keyword">from</span> <span class="string">'components/table'</span></span><br></pre></td></tr></table></figure>
+<h3 id="Antd-2-x"><a href="#Antd-2-x" class="headerlink" title="Antd(2.x)"></a>Antd(2.x)</h3><p>antd是（蚂蚁金服体验技术部）经过大量的项目实践和总结，沉淀出的一个中台设计语言 Ant Design，使用者包括蚂蚁金服、阿里巴巴、口碑、美团、滴滴等一系列知名公司，而且我从他们的<a href="https://ant.design/docs/spec/introduce-cn" target="_blank" rel="noopener">设计理念</a>也学到了很多关于UI、UX的知识。<br>该项目采用的是antd最新的版本2.10.0,由于2.x的版本和1.x的版本还是相差蛮大的，之前参考的项目(基于1.x)改起来太费劲，所以在组件那块就干脆自己重新封装了一遍。这部分知识点建议多看文档，官方更新还是非常勤快的。</p>
+<h3 id="React-router-4-x"><a href="#React-router-4-x" class="headerlink" title="React-router(4.x)"></a>React-router(4.x)</h3><p>react-router 4.x和2.x的差异又是特别的大，召唤<a href="https://reacttraining.com/react-router/web/guides/quick-start" target="_blank" rel="noopener">文档</a>,网上基本上都还是2.x的教程，看过文档之后，反正简而言之其就是要让使用者更容易上手。印象最深的是以前嵌套路由写法在4.x中写到同层了。如下示例他们的效果是相同的。</p>
+<p>2.x:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"/"</span> component=&#123;App&#125;&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/aaaa"</span> component=&#123;AAAA&#125; /&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/bbbb"</span> component=&#123;BBBB&#125; /&gt;</span><br><span class="line">&lt;<span class="regexp">/Route&gt;</span></span><br></pre></td></tr></table></figure>
+<p>4.x:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"/"</span> component=&#123;App&#125; /&gt;</span><br><span class="line">&lt;Route path=<span class="string">"/aaaa"</span> component=&#123;AAAA&#125; /&gt;</span><br><span class="line">&lt;Route path=<span class="string">"/bbbb"</span> component=&#123;BBBB&#125; /&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Fetch"><a href="#Fetch" class="headerlink" title="Fetch"></a>Fetch</h3><p>fetch 使用比较简单，基本的 promise 用法如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fetch(url).then(<span class="function"><span class="params">response</span> =&gt;</span> response.json())</span><br><span class="line">  .then(<span class="function"><span class="params">data</span> =&gt;</span> <span class="built_in">console</span>.log(data))</span><br><span class="line">  .catch(<span class="function"><span class="params">e</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">"Oops, error"</span>, e))</span><br></pre></td></tr></table></figure>
+<p>此外还能这样用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> response = <span class="keyword">await</span> fetch(url);</span><br><span class="line">  <span class="keyword">let</span> data = <span class="keyword">await</span> response.json();</span><br><span class="line">  <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Oops, error"</span>, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是其简洁的特点是为了让我们可以自定义其扩展，还是其本身就还不完善呢？我在调用 JSONP 的请求时，发现其不支持对 JSONP 的调用，所幸社区还是很给力地找到了 <a href="https://www.npmjs.com/package/fetch-jsonp" target="_blank" rel="noopener">fetch-jsonp</a> 这个模块，实现了对百度音乐接口调用。fetch-jsonp使用也和 fetch 类似，代码如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fetchJsonp(url,&#123;<span class="attr">method</span>: <span class="string">'GET'</span>&#125;)</span><br><span class="line">　　.then(<span class="function">(<span class="params">res</span>) =&gt;</span>res.json())</span><br><span class="line">　　.then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h3><p>使用了redux也已经有段时日了，我对redux的定义就是更好的管理组件的状态，一旦应用的逻辑复杂起来，各种组件状态、界面耦合起来，就容易出岔子，redux就是为了解决这个而诞生的，让我们可以更多地关注UI层，而降低对状态的关注。</p>
+<p><img src="http://with.muyunyun.cn/a40c3540ca26a56b28506d14125c04c1.jpg-400" alt=""></p>
+<p>画了一幅比较简陋的图来说明 redux 的大致流程，假设首先通过鼠标点击页面上的按钮触发了一个行为(action)，这时我们叫了一辆出租车 dispatch() 将这个 action 带到了终点站 store。这时候 store 就会通过 reducer 函数返回一个新的状态 state，从而改变 UI 显示。之前也写了篇<a href="http://www.cnblogs.com/MuYunyun/p/6530715.html" target="_blank" rel="noopener">深入Redux架构</a></p>
+<p>下面通过把 <a href="https://github.com/MuYunyun/todoList" target="_blank" rel="noopener">代办事项</a> 这个demo运用到后台管理系统中来讲解 Redux 在其中的运用。</p>
+<p>首先，在入口目录创建 store</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> store = createStore(rootReducer)</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &#123; routes &#125;</span><br><span class="line">  &lt;<span class="regexp">/Provider&gt;,</span></span><br><span class="line"><span class="regexp">  document.getElementById('root')</span></span><br><span class="line"><span class="regexp">);</span></span><br></pre></td></tr></table></figure>
+<p>接着，我使用了 <a href="https://github.com/acdlite/redux-actions" target="_blank" rel="noopener">redux-actions</a> 这个模块。使用 redux-actions 的好处是能简化大量对 action 的声明，以及能简化 reducer 的写法。</p>
+<p>代办事项的 actions 文件片段(拿展示全部任务、已完成任务、未完成任务的 action 举例):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createAction &#125; <span class="keyword">from</span> <span class="string">'redux-actions'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> setVisibility = createAction(<span class="string">'SET_VISIBILITY'</span>)</span><br></pre></td></tr></table></figure>
+<p>没使用 redux-actions 时，actions 写法如下，可看出着实麻烦了不少，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> setVisibility = <span class="function">(<span class="params">filter</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		type: <span class="string">"SET_VISIBILITY"</span>,</span><br><span class="line">		filter</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相应的代办事项的 reducers 文件片段:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> setVisibility = handleActions(&#123;</span><br><span class="line">  <span class="string">'SET_VISIBILITY'</span>(state, action) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; ...state, ...action.payload&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="string">'SHOW_ALL'</span>)</span><br></pre></td></tr></table></figure>
+<p>使用 redux-actions 后，只要进行如下调用,reducers文件里的<code>SET_VISIBILITY</code>的 action 就能捕获到<code>SHOW_ALL</code>这个状态。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; setVisibility &#125; <span class="keyword">from</span> <span class="string">'actions/todoList'</span></span><br><span class="line">@connect(</span><br><span class="line">    (state) =&gt; (&#123;</span><br><span class="line">        setVisibility: state.setVisibility, <span class="comment">// 这个 setVisibility 是取自 reducers 的</span></span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">dispatch(<span class="keyword">this</span>.props.dispatch(setVisibility(<span class="string">'SHOW_ALL'</span>)))</span><br></pre></td></tr></table></figure>
+<p>connect 来自 <a href="https://github.com/reactjs/react-redux" target="_blank" rel="noopener">react-redux</a>，这里的 @ 是 ES7里的装饰器的用法，使用它之后又能减少不少的代码量，原来还要写 <code>mapStateToProps</code>、<code>mapDispatchToProps</code>。</p>
+<h2 id="项目的一些扩展计划"><a href="#项目的一些扩展计划" class="headerlink" title="项目的一些扩展计划"></a>项目的一些扩展计划</h2><p>计划在该项目把平时工作、学习中遇到的react案例抽离成demo展现出来，所以以后还会多出一些模块。另外过段时间会在该项目中引人 typescript，如果还有精力的话，可以在这个项目上折腾下网关层。喜欢这个项目的话，<a href="https://github.com/MuYunyun/reactSPA" target="_blank" rel="noopener">点我 Star</a>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span class="type">Title:</span><a href="/posts/9bfbdbf4/">使用 React 全家桶搭建一个后台管理系统</a></p>
+  <p><span class="type">Author:</span><a href="https://github.com/MuYunyun" target="_blank" title="访问 牧云云 的个人博客">牧云云</a></p>
+  <p><span class="type">Posted On:</span>2017/06/15 01:06</p>
+  <p><span class="type">Update Time:</span>2018/11/26/ 22:11</p>
+  <p><span class="type">Origin Link:</span><a href="/posts/9bfbdbf4/" title="使用 React 全家桶搭建一个后台管理系统">http://muyunyun.cn/posts/9bfbdbf4/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://muyunyun.cn/posts/9bfbdbf4/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>EULA:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
+</div>
+<script>
+  var clipboard = new Clipboard('.fa-clipboard');
+	  clipboard.on('success', $(function(){
+	    $(".fa-clipboard").click(function(){
+        swal({
+          title: "",
+          text: '复制成功',
+          html: false,
+          timer: 500,
+          showConfirmButton: false
+          });
+      });
+    }));
+</script>
+
+      
+    </div>
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/Redux/" rel="tag"># Redux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/4a895cbd/" rel="prev" title="读书笔记-你不知道的 JavaScript (上)">
+      <i class="fa fa-chevron-left"></i> 读书笔记-你不知道的 JavaScript (上)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/2d678a6/" rel="next" title="React 在服务端渲染的实现">
+      React 在服务端渲染的实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目地址以及局部展示"><span class="nav-number">1.</span> <span class="nav-text">项目地址以及局部展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目目录结构"><span class="nav-number">2.</span> <span class="nav-text">项目目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术栈相关"><span class="nav-number">3.</span> <span class="nav-text">技术栈相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-2-x"><span class="nav-number">3.1.</span> <span class="nav-text">webpack(2.x)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#按需加载"><span class="nav-number">3.1.1.</span> <span class="nav-text">按需加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引人less"><span class="nav-number">3.1.2.</span> <span class="nav-text">引人less</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一键发布到-gh-pages"><span class="nav-number">3.1.3.</span> <span class="nav-text">一键发布到 gh-pages</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用路径的缩写"><span class="nav-number">3.1.4.</span> <span class="nav-text">引用路径的缩写</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Antd-2-x"><span class="nav-number">3.2.</span> <span class="nav-text">Antd(2.x)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React-router-4-x"><span class="nav-number">3.3.</span> <span class="nav-text">React-router(4.x)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fetch"><span class="nav-number">3.4.</span> <span class="nav-text">Fetch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redux"><span class="nav-number">3.5.</span> <span class="nav-text">Redux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目的一些扩展计划"><span class="nav-number">4.</span> <span class="nav-text">项目的一些扩展计划</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="牧云云"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">牧云云</p>
+  <div class="site-description" itemprop="description">是云随风，倚码为诗</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MuYunyun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MuYunyun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/YunyunMu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;YunyunMu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:muyy95@gmail.com" title="E-Mail → mailto:muyy95@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">牧云云</span>
+  <span class="with-love"><i class="fa fa-globe"></i></span>
+  <span class="author" itemprop="copyrightHolder"><a href="http://www.miitbeian.gov.cn/" target="_blank" rel="noopener">浙ICP备18050494号</a></span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="https://cdnjs.gtimg.com/cdnjs/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/music/aplayer.js"></script>
+  <script type="text/javascript" src="/js/music/init.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/>
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+  <script>
+  var gitment = new Gitment({
+    id: window.location.pathname, // 可选。默认为 location.href
+    owner: 'MuYunyun',
+    repo: 'MuYunyun.github.io',
+    oauth: {
+      client_id: 'f29b1fd73d2d4aee9abc',
+      client_secret: '9bef686f836f34555372c7777dd41f02a6e0e8a1',
+    },
+    perPage: 10,
+  })
+  gitment.render('container')
+  </script>
+  
+<div id="hexo-helper-live2d">
+  <canvas id="live2dcanvas" width="150" height="300"></canvas>
+</div>
+<style>
+  #live2dcanvas{
+    position: fixed;
+    width: 150px;
+    height: 300px;
+    opacity:10;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    bottom: -20px;
+  }
+</style>
+<script type="text/javascript" src="/live2d/device.min.js"></script>
+<script type="text/javascript">
+const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
+(function(){
+  if((typeof(device) != 'undefined') && (device.mobile())){
+    var trElement = document.getElementById('hexo-helper-live2d');
+    trElement.parentNode.removeChild(trElement);
+    return;
+  }else
+    if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
+  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/tororo.model.json", 0.5);});
+})();
+</script>
+
+</body>
+</html>

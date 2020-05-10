@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"muyunyun.cn","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX&#x2F;虚拟DOM&#x2F;组件&#x2F;生命周期&#x2F;diff算法&#x2F;setState&#x2F;PureComponent&#x2F;HOC&#x2F;…) 项目地址">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 0 到 1 实现 React 系列 —— 5.PureComponent 实现 &amp;&amp; HOC 探幽">
+<meta property="og:url" content="http://muyunyun.cn/posts/92dc08c6/index.html">
+<meta property="og:site_name" content="Time Flying">
+<meta property="og:description" content="本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX&#x2F;虚拟DOM&#x2F;组件&#x2F;生命周期&#x2F;diff算法&#x2F;setState&#x2F;PureComponent&#x2F;HOC&#x2F;…) 项目地址">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://with.muyunyun.cn/9c461a61924ed0fecb6024a256671251.jpg-muyy">
+<meta property="og:image" content="http://with.muyunyun.cn/hoc%E6%8E%A2%E7%B4%A2%E4%B9%8B%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6.gif">
+<meta property="og:image" content="http://with.muyunyun.cn/e7dbedcefd9a61dcd12fbcff89dc19ef.jpg-200">
+<meta property="article:published_time" content="2018-08-27T03:39:06.000Z">
+<meta property="article:modified_time" content="2018-11-26T14:48:20.564Z">
+<meta property="article:author" content="牧云云">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://with.muyunyun.cn/9c461a61924ed0fecb6024a256671251.jpg-muyy">
+
+<link rel="canonical" href="http://muyunyun.cn/posts/92dc08c6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>从 0 到 1 实现 React 系列 —— 5.PureComponent 实现 && HOC 探幽 | Time Flying</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Time Flying" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Time Flying</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/MuYunyun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://muyunyun.cn/posts/92dc08c6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="牧云云">
+      <meta itemprop="description" content="是云随风，倚码为诗">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Time Flying">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从 0 到 1 实现 React 系列 —— 5.PureComponent 实现 && HOC 探幽
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-08-27 11:39:06" itemprop="dateCreated datePublished" datetime="2018-08-27T11:39:06+08:00">2018-08-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.wordcount</span>
+                
+                <span title="post.wordcount">
+                  1,658 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">post.min2read</span>
+                
+                <span title="post.min2read">
+                  7 分钟
+                </span>
+              
+            </div>
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="http://with.muyunyun.cn/9c461a61924ed0fecb6024a256671251.jpg-muyy" alt=""></p>
+<p>本系列文章在实现一个 cpreact 的同时帮助大家理顺 React 框架的核心内容(JSX/虚拟DOM/组件/生命周期/diff算法/setState/PureComponent/HOC/…) <a href="https://github.com/MuYunyun/cpreact" target="_blank" rel="noopener">项目地址</a></p>
+<a id="more"></a>
+
+<ul>
+<li><a href="https://github.com/MuYunyun/blog/issues/24" target="_blank" rel="noopener">从 0 到 1 实现 React 系列 —— JSX 和 Virtual DOM</a></li>
+<li><a href="https://github.com/MuYunyun/blog/issues/25" target="_blank" rel="noopener">从 0 到 1 实现 React 系列 —— 组件和 state|props</a></li>
+<li><a href="https://github.com/MuYunyun/blog/issues/26" target="_blank" rel="noopener">从 0 到 1 实现 React 系列 —— 生命周期和 diff 算法</a></li>
+<li><a href="https://github.com/MuYunyun/blog/issues/27" target="_blank" rel="noopener">从 0 到 1 实现 React 系列 —— 优化 setState 和 ref 的实现</a></li>
+<li><a href="https://github.com/MuYunyun/blog/issues/29" target="_blank" rel="noopener">从 0 到 1 实现 React 系列 —— PureComponent 实现 &amp;&amp; HOC 探幽</a></li>
+</ul>
+<h3 id="PureComponent-精髓"><a href="#PureComponent-精髓" class="headerlink" title="PureComponent 精髓"></a>PureComponent 精髓</h3><p>使用 PureComponent 是优化 React 性能的一种常用手段，相较于 Component, PureComponent 会在 render 之前自动执行一次 shouldComponentUpdate() 函数，根据返回的 bool 值判断是否进行 render。其中有个重点是 PureComponent 在 shouldComponentUpdate() 的时候会进行 shallowEqual(浅比较)。</p>
+<p>PureComponent 的浅比较策略如下：</p>
+<p>对 prevState/nextState 以及 prevProps/nextProps 这两组数据进行浅比较：</p>
+<p>1.对象第一层数据未发生改变，render 方法不会触发；<br>2.对象第一层数据发生改变(包括第一层数据引用的改变)，render 方法会触发;</p>
+<h4 id="PureComponent-的实现"><a href="#PureComponent-的实现" class="headerlink" title="PureComponent 的实现"></a>PureComponent 的实现</h4><p>照着上述思路我们来实现 PureComponent 的逻辑</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PureComponent</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.props = props || &#123;&#125;</span><br><span class="line">  <span class="keyword">this</span>.state = &#123;&#125;</span><br><span class="line"></span><br><span class="line">  isShouldComponentUpdate.call(<span class="keyword">this</span>) <span class="comment">// 为每个 PureComponent 绑定 shouldComponentUpdate 方法</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PureComponent.prototype.setState = <span class="function"><span class="keyword">function</span>(<span class="params">updater, cb</span>) </span>&#123;</span><br><span class="line">  isShouldComponentUpdate.call(<span class="keyword">this</span>) <span class="comment">// 调用 setState 时，让 this 指向子类的实例，目的取到子类的 this.state</span></span><br><span class="line">  asyncRender(updater, <span class="keyword">this</span>, cb)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isShouldComponentUpdate</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> cpState = <span class="keyword">this</span>.state</span><br><span class="line">  <span class="keyword">const</span> cpProps = <span class="keyword">this</span>.props</span><br><span class="line">  <span class="keyword">this</span>.shouldComponentUpdate = <span class="function"><span class="keyword">function</span> (<span class="params">nextProps, nextState</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!shallowEqual(cpState, nextState) || !shallowEqual(cpProps, nextProps)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>  <span class="comment">// 只要 state 或 props 浅比较不等的话，就进行渲染</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span> <span class="comment">// 浅比较相等的话，不渲染</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 浅比较逻辑</span></span><br><span class="line"><span class="keyword">const</span> shallowEqual = <span class="function"><span class="keyword">function</span>(<span class="params">oldState, nextState</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> oldKeys = <span class="built_in">Object</span>.keys(oldState)</span><br><span class="line">  <span class="keyword">const</span> newKeys = <span class="built_in">Object</span>.keys(nextState)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (oldKeys.length !== newKeys.length) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> flag = <span class="literal">true</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; oldKeys.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!nextState.hasOwnProperty(oldKeys[i])) &#123;</span><br><span class="line">      flag = <span class="literal">false</span></span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nextState[oldKeys[i]] !== oldState[oldKeys[i]]) &#123;</span><br><span class="line">      flag = <span class="literal">false</span></span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> flag</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h4><p>测试用例用 在 React 上提的一个 <a href="https://github.com/facebook/react/issues/13438#issuecomment-414128918" target="_blank" rel="noopener">issue</a> 中的案例，我们期望点击增加按钮后，页面上显示的值能够加 1。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">PureComponent</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props)</span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      count: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.click = <span class="keyword">this</span>.click.bind(<span class="keyword">this</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  click() &#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">      count: ++<span class="keyword">this</span>.state.count,</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;button onClick=&#123;<span class="keyword">this</span>.click&#125;&gt;增加&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div&gt;&#123;this.state.count&#125;&lt;/</span>div&gt;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然而，我们点击上述代码，页面上显示的 0 分毫不动！！！</p>
+<p>揭秘如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">click() &#123;</span><br><span class="line">  <span class="keyword">const</span> t = ++<span class="keyword">this</span>.state.count</span><br><span class="line">  <span class="built_in">console</span>.log(t === <span class="keyword">this</span>.state.count) <span class="comment">// true</span></span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    count: t,</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当点击增加按钮，控制台显示 <code>t === this.state.count</code> 为 true, 也就说明了 setState 前后的状态是统一的，所以 shallowEqual(浅比较) 返回的是 true，致使 shouldComponentUpdate 返回了 false，页面因此没有渲染。</p>
+<p>类似的，如下写法也是达不到目标的，留给读者思考了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">click() &#123;</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    count: <span class="keyword">this</span>.state.count++,</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么如何达到我们期望的目标呢。揭秘如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">click() &#123;</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">    count: <span class="keyword">this</span>.state.count + <span class="number">1</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>感悟：小小的一行代码里蕴藏着无数的 bug。</p>
+<h3 id="HOC-实践"><a href="#HOC-实践" class="headerlink" title="HOC 实践"></a>HOC 实践</h3><p>高阶组件(Higher Order Component) 不属于 React API 范畴，但是它在 React 中也是一种实用的技术，<code>它可以将常见任务抽象成一个可重用的部分</code>。这个小节算是番外篇，会结合 <a href="https://github.com/MuYunyun/cpreact" target="_blank" rel="noopener">cpreact</a>(前文实现的类 react 轮子) 与 HOC 进行相关的实践。</p>
+<p>它可以用如下公式表示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">y = f(x),</span><br><span class="line"></span><br><span class="line"><span class="comment">// x：原有组件</span></span><br><span class="line"><span class="comment">// y：高阶组件</span></span><br><span class="line"><span class="comment">// f()：</span></span><br></pre></td></tr></table></figure>
+
+<p><code>f()</code> 的实现有两种方法，下面进行实践。</p>
+<h4 id="属性代理-Props-Proxy"><a href="#属性代理-Props-Proxy" class="headerlink" title="属性代理(Props Proxy)"></a>属性代理(Props Proxy)</h4><p>这类实现也是装饰器模式的一种运用，通过装饰器函数给原来函数赋能。下面例子在装饰器函数中给被装饰的组件传递了额外的属性 { a: 1, b: 2 }。</p>
+<blockquote>
+<p>声明：下文所展示的 demo 均已在 <a href="https://github.com/MuYunyun/cpreact" target="_blank" rel="noopener">cpreact</a> 测试通过</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ppHOC</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">const</span> obj = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span> &#125;</span><br><span class="line">      <span class="keyword">return</span> (</span><br><span class="line">        &lt;WrappedComponent &#123; ...this.props &#125; &#123; ...obj &#125; /&gt;</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@ppHOC</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123; <span class="keyword">this</span>.props.a + <span class="keyword">this</span>.props.b &#125; &#123; <span class="comment">/* 输出 3 */</span> &#125;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>要是将 { a: 1, b: 2 } 替换成全局共享对象，那么不就是 react-redux 中的 Connect 了么?</p>
+<p>改进上述 demo，我们就可以实现可插拔的<a href="https://reactjs.org/docs/forms.html#controlled-components" target="_blank" rel="noopener">受控组件</a>，代码示意如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ppDecorate</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="keyword">super</span>()</span><br><span class="line">      <span class="keyword">this</span>.state = &#123;</span><br><span class="line">        value: <span class="string">''</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">this</span>.onChange = <span class="keyword">this</span>.onChange.bind(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    onChange(e) &#123;</span><br><span class="line">      <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">        value: e.target.value</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">const</span> obj = &#123;</span><br><span class="line">        onChange: <span class="keyword">this</span>.onChange,</span><br><span class="line">        value: <span class="keyword">this</span>.state.value,</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> (</span><br><span class="line">        &lt;WrappedComponent &#123; ...this.props &#125; &#123; ...obj &#125; /&gt;</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@ppDecorate</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;input &#123; ...this.props &#125; /&gt;</span><br><span class="line">        &lt;div&gt;&#123; <span class="keyword">this</span>.props.value &#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下图：</p>
+<p><img src="http://with.muyunyun.cn/hoc%E6%8E%A2%E7%B4%A2%E4%B9%8B%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6.gif" alt=""></p>
+<p>这里有个坑点，当我们在输入框输入字符的时候，并不会立马触发 onChange 事件(我们想要让事件立即触发，然而现在要按下回车键或者点下鼠标才触发)，在 react 中有个<a href="https://reactjs.org/docs/events.html" target="_blank" rel="noopener">合成事件</a> 的知识点，下篇文章会进行探究。</p>
+<p>顺带一提在这个 demo 中似乎看到了双向绑定的效果，但是实际中 React 并没有双向绑定的概念，但是我们可以运用 HOC 的知识点结合 setState 在 React 表单中实现伪双向绑定的效果。</p>
+<h4 id="继承反转-Inheritance-Inversion"><a href="#继承反转-Inheritance-Inversion" class="headerlink" title="继承反转(Inheritance Inversion)"></a>继承反转(Inheritance Inversion)</h4><p>继承反转的核心是：传入 HOC 的组件会作为返回类的父类来使用。然后在 render 中调用 <code>super.render()</code> 来调用父类的 render 方法。</p>
+<blockquote>
+<p>在 <a href="https://github.com/MuYunyun/blog/blob/master/BasicSkill/readES6/继承.md#作为对象调用的-super" target="_blank" rel="noopener">《ES6 继承与 ES5 继承的差异》</a>中我们提到了作为对象使用的 super 指向父类的实例。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">iiHOC</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">WrappedComponent</span> </span>&#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="keyword">const</span> parentRender = <span class="keyword">super</span>.render()</span><br><span class="line">      <span class="keyword">if</span> (parentRender.nodeName === <span class="string">'span'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">          &lt;span&gt;继承反转&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">@iiHOC</span></span><br><span class="line"><span class="regexp">class B extends Component &#123;</span></span><br><span class="line"><span class="regexp">  render() &#123;</span></span><br><span class="line"><span class="regexp">    return (</span></span><br><span class="line"><span class="regexp">      &lt;span&gt;Inheritance Inversion&lt;/</span>span&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个 demo 中，在 HOC 内实现了渲染劫持，页面上最终显示如下：</p>
+<p><img src="http://with.muyunyun.cn/e7dbedcefd9a61dcd12fbcff89dc19ef.jpg-200" alt=""></p>
+<blockquote>
+<p>可能会有疑惑，使用<code>属性代理</code>的方式貌似也能实现渲染劫持呀，但是那样做没有<code>继承反转</code>这种方式纯粹。</p>
+</blockquote>
+<h3 id="鸣谢"><a href="#鸣谢" class="headerlink" title="鸣谢"></a>鸣谢</h3><p>Especially thank <a href="https://github.com/hujiulong/simple-react" target="_blank" rel="noopener">simple-react</a> for the guidance function of this library. At the meantime，respect for <a href="https://github.com/developit/preact" target="_blank" rel="noopener">preact</a> and <a href="https://github.com/facebook/react" target="_blank" rel="noopener">react</a></p>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><ul>
+<li><a href="https://github.com/facebook/react/issues/13438" target="_blank" rel="noopener">A doubt behaviour using the PureComponent</a></li>
+<li><a href="https://juejin.im/post/59cdaaccf265da066f6ac83b" target="_blank" rel="noopener">React 的性能优化（一）当 PureComponent 遇上 ImmutableJS</a></li>
+<li><a href="https://juejin.im/post/5b1caceb5188257d63226743" target="_blank" rel="noopener">React性能优化方案之PureComponent</a></li>
+<li><a href="https://juejin.im/post/59818a485188255694568ff2" target="_blank" rel="noopener">带着三个问题深入浅出React高阶组件</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/24776678?refer=FrontendMagazine" target="_blank" rel="noopener">深入理解 React 高阶组件</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span class="type">Title:</span><a href="/posts/92dc08c6/">从 0 到 1 实现 React 系列 —— 5.PureComponent 实现 && HOC 探幽</a></p>
+  <p><span class="type">Author:</span><a href="https://github.com/MuYunyun" target="_blank" title="访问 牧云云 的个人博客">牧云云</a></p>
+  <p><span class="type">Posted On:</span>2018/08/27 11:08</p>
+  <p><span class="type">Update Time:</span>2018/11/26/ 22:11</p>
+  <p><span class="type">Origin Link:</span><a href="/posts/92dc08c6/" title="从 0 到 1 实现 React 系列 —— 5.PureComponent 实现 && HOC 探幽">http://muyunyun.cn/posts/92dc08c6/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://muyunyun.cn/posts/92dc08c6/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>EULA:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
+</div>
+<script>
+  var clipboard = new Clipboard('.fa-clipboard');
+	  clipboard.on('success', $(function(){
+	    $(".fa-clipboard").click(function(){
+        swal({
+          title: "",
+          text: '复制成功',
+          html: false,
+          timer: 500,
+          showConfirmButton: false
+          });
+      });
+    }));
+</script>
+
+      
+    </div>
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/ac276990/" rel="prev" title="常见数据结构小结">
+      <i class="fa fa-chevron-left"></i> 常见数据结构小结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/da72b66c/" rel="next" title="从 0 到 1 实现 React 系列 —— 6.onChange 事件以及受控组件">
+      从 0 到 1 实现 React 系列 —— 6.onChange 事件以及受控组件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#PureComponent-精髓"><span class="nav-number">1.</span> <span class="nav-text">PureComponent 精髓</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PureComponent-的实现"><span class="nav-number">1.1.</span> <span class="nav-text">PureComponent 的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试用例"><span class="nav-number">1.2.</span> <span class="nav-text">测试用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HOC-实践"><span class="nav-number">2.</span> <span class="nav-text">HOC 实践</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性代理-Props-Proxy"><span class="nav-number">2.1.</span> <span class="nav-text">属性代理(Props Proxy)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承反转-Inheritance-Inversion"><span class="nav-number">2.2.</span> <span class="nav-text">继承反转(Inheritance Inversion)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#鸣谢"><span class="nav-number">3.</span> <span class="nav-text">鸣谢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关链接"><span class="nav-number">4.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="牧云云"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">牧云云</p>
+  <div class="site-description" itemprop="description">是云随风，倚码为诗</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MuYunyun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MuYunyun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/YunyunMu" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;YunyunMu" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:muyy95@gmail.com" title="E-Mail → mailto:muyy95@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">牧云云</span>
+  <span class="with-love"><i class="fa fa-globe"></i></span>
+  <span class="author" itemprop="copyrightHolder"><a href="http://www.miitbeian.gov.cn/" target="_blank" rel="noopener">浙ICP备18050494号</a></span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="https://cdnjs.gtimg.com/cdnjs/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/music/aplayer.js"></script>
+  <script type="text/javascript" src="/js/music/init.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/>
+  <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+  <script>
+  var gitment = new Gitment({
+    id: window.location.pathname, // 可选。默认为 location.href
+    owner: 'MuYunyun',
+    repo: 'MuYunyun.github.io',
+    oauth: {
+      client_id: 'f29b1fd73d2d4aee9abc',
+      client_secret: '9bef686f836f34555372c7777dd41f02a6e0e8a1',
+    },
+    perPage: 10,
+  })
+  gitment.render('container')
+  </script>
+  
+<div id="hexo-helper-live2d">
+  <canvas id="live2dcanvas" width="150" height="300"></canvas>
+</div>
+<style>
+  #live2dcanvas{
+    position: fixed;
+    width: 150px;
+    height: 300px;
+    opacity:10;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    bottom: -20px;
+  }
+</style>
+<script type="text/javascript" src="/live2d/device.min.js"></script>
+<script type="text/javascript">
+const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
+(function(){
+  if((typeof(device) != 'undefined') && (device.mobile())){
+    var trElement = document.getElementById('hexo-helper-live2d');
+    trElement.parentNode.removeChild(trElement);
+    return;
+  }else
+    if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
+  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/tororo.model.json", 0.5);});
+})();
+</script>
+
+</body>
+</html>
