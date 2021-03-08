@@ -46,6 +46,19 @@
     .icon a {
       display: inline-block;
       margin: 0 5px;
+      position: relative;
+    }
+
+    .icon a:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: -10px;
+      left: -3px;
+      width: 50px;
+      padding: 2px;
+      color: #fff;
+      z-index: 1;
+      font-size: 12px;
     }
 
     .icon svg.sina {
@@ -125,7 +138,7 @@
       <div class="content">
         <a class="project" href="https://muyunyun.cn/blog">博客</a>
         <div class="icon">
-          <a target="_blank" href="https://github.com/MuYunyun">
+          <a target="_blank" href="https://github.com/MuYunyun" data-tooltip="github">
             <svg t="1603709404078" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
               p-id="2409" width="128" height="128">
               <path
@@ -133,15 +146,15 @@
                 fill="" p-id="2410"></path>
             </svg>
           </a>
-          <a target="_blank" href="https://twitter.com/YunyunMu">
-            <svg t="1603709582898" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-              p-id="3317" width="128" height="128">
+          <a target="_blank" href="https://juejin.cn/user/4195392100763480" data-tooltip="掘金">
+            <svg t="1615179293115" class="icon" viewBox="0 0 1272 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1970"
+              width="22" height="22">
               <path
-                d="M923.2 289.6c0 354.4-232.8 609.6-575.2 620.8-144.8 11.2-244-32.8-332.8-99.2 99.2 11.2 232.8-21.6 298.4-88.8-99.2 0-155.2-56-188-132h88.8C125.6 556.8 58.4 490.4 58.4 380c21.6 11.2 44 21.6 88.8 21.6-77.6-44-121.6-188-66.4-276.8 99.2 110.4 220.8 210.4 421.6 220.8-56-220.8 232.8-332.8 354.4-188 56-11.2 88.8-32.8 132-56-11.2 56-44 88.8-88.8 110.4 44 0 77.6-11.2 110.4-32.8-10.4 44-54.4 88.8-87.2 110.4z"
-                fill="" p-id="3318"></path>
+                d="M751.863172 91.206621L636.186483 0l-120.832 95.302621-6.285242 5.049379 127.117242 101.34069 127.540965-101.34069-11.864276-9.145379z m438.377931 353.739034l-554.372413 437.142069-554.019311-436.894896L0 510.94069l635.86869 501.371586 636.221793-501.654069-81.84938-65.712552z m-554.372413 35.451586L334.177103 242.582069 252.363034 308.25931l383.470345 302.397793 383.858759-302.680275-81.814069-65.712552-302.009379 238.132965z"
+                fill="" p-id="1971"></path>
             </svg>
           </a>
-          <a target="_blank" href="https://www.zhihu.com/people/YunyunMu">
+          <a target="_blank" href="https://www.zhihu.com/people/YunyunMu" data-tooltip="知乎">
             <svg t="1603709742158" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
               p-id="4221" width="128" height="128">
               <path
@@ -149,7 +162,15 @@
                 fill="" p-id="4222"></path>
             </svg>
           </a>
-          <a target="_blank" href="mailto:muyy95@gmail.com">
+          <a target="_blank" href="https://twitter.com/YunyunMu" data-tooltip="twitter">
+            <svg t="1603709582898" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              p-id="3317" width="128" height="128">
+              <path
+                d="M923.2 289.6c0 354.4-232.8 609.6-575.2 620.8-144.8 11.2-244-32.8-332.8-99.2 99.2 11.2 232.8-21.6 298.4-88.8-99.2 0-155.2-56-188-132h88.8C125.6 556.8 58.4 490.4 58.4 380c21.6 11.2 44 21.6 88.8 21.6-77.6-44-121.6-188-66.4-276.8 99.2 110.4 220.8 210.4 421.6 220.8-56-220.8 232.8-332.8 354.4-188 56-11.2 88.8-32.8 132-56-11.2 56-44 88.8-88.8 110.4 44 0 77.6-11.2 110.4-32.8-10.4 44-54.4 88.8-87.2 110.4z"
+                fill="" p-id="3318"></path>
+            </svg>
+          </a>
+          <a target="_blank" href="mailto:muyy95@gmail.com" data-tooltip="email">
             <svg t="1603709790743" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
               p-id="5171" width="128" height="128">
               <path
